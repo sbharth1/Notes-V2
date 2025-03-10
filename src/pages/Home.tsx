@@ -4,11 +4,10 @@ import Content from './Content';
 const Home = () => {
   return (
     <>
-      <Navbar />
-      <Content />
+        <Navbar />
+        <Content />
     </>
   );
 };
 
 export default Home;
-

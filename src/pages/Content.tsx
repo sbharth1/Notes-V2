@@ -1,10 +1,15 @@
-import {Text,StyleSheet, View, ScrollView} from 'react-native';
+import {Text, StyleSheet, View, ScrollView} from 'react-native';
+import {Card} from 'react-native-paper';
 
 const Content = () => {
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <Text>hello content</Text>
+    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+      <View style={styles.card}>
+        <Card.Title
+          style={styles.maincard}
+          title="Card Title"
+          subtitle="Card Subtitle"
+        />
       </View>
     </ScrollView>
   );
@@ -13,9 +18,21 @@ const Content = () => {
 export default Content;
 
 const styles = StyleSheet.create({
-  container: {
-    height:"100%",
-    width:"100%",
-    backgroundColor:"#fff"
+  scrollViewContainer: {
+    flexGrow: 1,
+    justifyContent: 'flex-start', 
+    alignItems: 'center',
+    paddingTop: 20, 
+  },
+  card: {
+    backgroundColor: 'green',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center', 
+    marginBottom: 20,
+  },
+  maincard: {
+    width: '80%',
+    backgroundColor: 'red',
   },
 });
