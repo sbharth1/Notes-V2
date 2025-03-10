@@ -9,11 +9,13 @@ const Navbar = () => {
   return (
     <View>
       <View style={styles.navbar}>
+        <View style={styles.searchbar}>
       <Searchbar
       placeholder="Search"
       onChangeText={setSearchQuery}
       value={searchQuery}
     />
+    </View>
       </View>
     </View>
   );
@@ -31,5 +33,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 10,
   },
-
+searchbar:{
+  width:"50%",
+}
 });
