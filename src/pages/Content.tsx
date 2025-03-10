@@ -4,7 +4,7 @@ const Content = () => {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Text>hello content page</Text>
+        <Text>hello content</Text>
       </View>
     </ScrollView>
   );
@@ -14,7 +14,8 @@ export default Content;
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    margin: 20,
+    height:"100%",
+    width:"100%",
+    backgroundColor:"#fff"
   },
 });

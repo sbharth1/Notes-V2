@@ -14,8 +14,7 @@
     "@react-navigation/native-stack": "^7.2.1",
     "react": "19.0.0",
     "react-native": "0.78.0",
-    "react-native-paper": "^5.13.1",
-    "tailwind-rn": "^4.2.0"
+    "react-native-paper": "^5.13.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
