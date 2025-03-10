@@ -1,12 +1,19 @@
+import { useState } from 'react';
 import {  StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import { Searchbar } from 'react-native-paper';
 
-const Navbar = ({navigation}:any) => {
+
+const Navbar = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+
   return (
     <View>
       <View style={styles.navbar}>
-         <Text>navbar</Text>
-
+      <Searchbar
+      placeholder="Search"
+      onChangeText={setSearchQuery}
+      value={searchQuery}
+    />
       </View>
     </View>
   );
