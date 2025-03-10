@@ -2,7 +2,7 @@ import {Alert, Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 // import Content from './Content'
 
-const Navbar = ({navigation}) => {
+const Navbar = ({navigation}:any) => {
   return (
     <View>
       <View style={styles.navbar}>
