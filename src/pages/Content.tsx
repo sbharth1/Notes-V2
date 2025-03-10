@@ -3,7 +3,11 @@ import {Text, StyleSheet, View, ScrollView, TouchableOpacity, Alert} from 'react
 import {Card} from 'react-native-paper';
 
 const Content = () => {
-  const [cardData, setCardData] = useState([]);
+  interface cardData {
+    title:String,
+    text:String,
+  }
+  const [cardData, setCardData] = useState<cardData[]>([]);
   useEffect(() => {
     const setData = async () => {
       fetch('https://67c937330acf98d0708941b3.mockapi.io/demo/fakedata')
