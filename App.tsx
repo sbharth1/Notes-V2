@@ -3,7 +3,7 @@ import React from 'react'
 
 const App = () => {
   return (
-    <View>
+    <View style={styles.main}>
       <Text>Hello world</Text>
     </View>
   )
@@ -11,4 +11,8 @@ const App = () => {
 
 export default App
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  main:{
+    backgroundColor:'#f9f9f9',
+  }
+})
