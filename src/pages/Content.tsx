@@ -62,14 +62,16 @@ const styles = StyleSheet.create({
   },
   maincard: {
     width: '80%',
-    backgroundColor: 'red',
+    backgroundColor: 'pink',
+    borderRadius:10,
     margin: 5,
+
   },
   fab: {
     position: 'absolute',
     bottom: 20,
     right: 20,
-    backgroundColor: 'blue',
+    backgroundColor: '#f45a25',
     width: 60,
     height: 60,
     borderRadius: 30,

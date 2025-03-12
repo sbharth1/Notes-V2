@@ -1,20 +1,19 @@
-import { Image, StyleSheet, View } from 'react-native';
-import { TextInput } from 'react-native-paper';
+import {StyleSheet, View} from 'react-native';
+import {Text, TextInput} from 'react-native-paper';
 
 const Navbar = () => {
-
   return (
     <View>
       <View style={styles.navbar}>
         <View>
-        <Image source={{uri:'https://imgs.search.brave.com/GLkAP6cP1uGrlZyJLPZT03ULZRXPu1rdCaDdwLu9F0g/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvd2hp/dGUtbm90ZS1wYXBl/ci1wbmctNDYtM3dh/eWFna2V1Z2VxZ2hq/cC5wbmc'}} style={{height:100,width:100}}  />
+          <Text style={styles.navtext}>Notes</Text>
         </View>
         <View style={styles.searchbar}>
           <TextInput
-            placeholder='search...'
+            placeholder="search..."
             style={styles.mainsearchbar}
-            underlineColor='transparent'
-            mode="flat" 
+            underlineColor="transparent"
+            mode="flat"
           />
         </View>
       </View>
@@ -28,15 +27,15 @@ const styles = StyleSheet.create({
   navbar: {
     width: '100%',
     height: 60,
-    display:"flex",
-    backgroundColor: 'grey',
+    display: 'flex',
+    backgroundColor: 'black',
     alignItems: 'center',
     justifyContent: 'space-between',
-    flexDirection:"row",
+    flexDirection: 'row',
     paddingHorizontal: 10,
   },
   searchbar: {
-    width: "60%",
+    width: '60%',
   },
   mainsearchbar: {
     height: 40,
@@ -45,6 +44,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
     flexDirection: 'row',
-
   },
+  navtext:{
+    fontSize:25,
+    fontWeight:900,
+    color:'white'
+  }
 });
