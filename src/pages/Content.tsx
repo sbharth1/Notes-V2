@@ -1,18 +1,24 @@
-import {useEffect, useState} from 'react';
-import {Text, StyleSheet, View, ScrollView, TouchableOpacity, Alert} from 'react-native';
-import {Card} from 'react-native-paper';
+import { useEffect, useState } from 'react';
+import { Text, StyleSheet, View, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { Card, IconButton } from 'react-native-paper'; 
+
+interface CardData {
+  title: string;
+  text: string;
+}
 
 const Content = () => {
-  interface cardData {
-    title:String,
-    text:String,
-  }
-  const [cardData, setCardData] = useState<cardData[]>([]);
+  const [cardData, setCardData] = useState<CardData[]>([]);
+
   useEffect(() => {
     const setData = async () => {
-      fetch('https://67c937330acf98d0708941b3.mockapi.io/demo/fakedata')
-        .then(res => res.json())
-        .then(res => setCardData(res));
+      try {
+        const res = await fetch('https://67c937330acf98d0708941b3.mockapi.io/demo/fakedata');
+        const data = await res.json();
+        setCardData(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     };
     setData();
   }, []);
@@ -25,16 +31,20 @@ const Content = () => {
             <Card.Title
               key={i}
               style={styles.maincard}
-              title={val.title}  
-              subtitle={val.text}  
+              title={val.title}
+              subtitle={val.text}
+              right={() => (
+                <IconButton icon="dots-vertical" onPress={() => {}} />
+              )}
             />
           ))}
         </View>
       </ScrollView>
 
-      <TouchableOpacity 
-        style={styles.fab} 
-        onPress={() => Alert.alert('Add Button Pressed!')}>
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => Alert.alert('Add Button Pressed!')}
+      >
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>
     </View>
@@ -63,9 +73,8 @@ const styles = StyleSheet.create({
   maincard: {
     width: '80%',
     backgroundColor: 'pink',
-    borderRadius:10,
+    borderRadius: 10,
     margin: 5,
-
   },
   fab: {
     position: 'absolute',
