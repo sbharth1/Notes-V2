@@ -4,7 +4,7 @@ import Content from './Content';
 const Home = () => {
   return (
     <>
-        <Navbar />
+      <Navbar />
         <Content />
     </>
   );

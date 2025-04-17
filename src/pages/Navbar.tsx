@@ -14,6 +14,7 @@ const Navbar = () => {
             style={styles.mainsearchbar}
             underlineColor="transparent"
             mode="flat"
+            textColor='white'
           />
         </View>
       </View>
@@ -40,14 +41,13 @@ const styles = StyleSheet.create({
   mainsearchbar: {
     height: 40,
     borderRadius: 10,
-    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'flex-end',
     flexDirection: 'row',
   },
-  navtext:{
-    fontSize:25,
-    fontWeight:900,
-    color:'white'
-  }
+  navtext: {
+    fontSize: 25,
+    fontWeight: '900',
+    color: 'white',
+  },
 });
