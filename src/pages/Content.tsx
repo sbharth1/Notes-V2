@@ -18,6 +18,11 @@ interface CardData {
 
 const Content = () => {
   const [cardData, setCardData] = useState<CardData[]>([]);
+  const [visible, setVisible] = useState(false);
+  const hideModal = () => setVisible(false);
+  const [activeMenu, setActiveMenu] = useState<number | null>(null);
+
+
 
   useEffect(() => {
     const setData = async () => {
@@ -34,37 +39,44 @@ const Content = () => {
     };
     setData();
   }, []);
-
+  
   return (
     <View style={styles.container}>
       {/* Modal  */}
-    <ViewModal/>
+      <ViewModal hideModal={hideModal} visible={visible}/>
 
       {/* Content  */}
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View style={styles.card}>
-          {cardData?.map((val, i) => (
-            <Card.Title
-              key={i}
-              style={styles.maincard}
-              title={val.name}
-              subtitle={val.description}
-              right={() => (
-                <IconButton icon="dots-vertical" iconColor='black' onPress={() => {
-                  <View style={{ flex: 1 }}>
-                  <Menu.Item  onPress={() => {}} title="edit" />
-                  <Menu.Item  onPress={() => {}} title="delete" />
-                </View>
-                }} />
-              )}
-            />
-          ))}
+        {cardData.map((val, i) => (
+  <Card.Title
+    key={i}
+    style={styles.maincard}
+    title={val.name}
+    subtitle={val.description}
+    right={() => (
+      <Menu
+        visible={activeMenu === i}
+        onDismiss={() => setActiveMenu(null)}
+        anchor={
+          <IconButton
+            icon="dots-vertical"
+            iconColor="black"
+            onPress={() => setActiveMenu(i)}
+          />
+        }>
+        <Menu.Item onPress={() => Alert.alert("Edit", val.name)} title="Edit" />
+        <Menu.Item onPress={() => Alert.alert("Delete", val.name)} title="Delete" />
+      </Menu>
+    )}
+  />
+))}
         </View>
       </ScrollView>
 
       <TouchableOpacity
         style={styles.fab}
-        onPress={() => Alert.alert('Add Button Pressed!')}>
+        onPress={() => setVisible(true)}>
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>
     </View>
