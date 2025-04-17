@@ -1,4 +1,4 @@
-export const createTables = async db => {
+export const createTables = async (db:any) => {
   await db.excuteSql(`CREATE TABLE IF NOT EXIST notes (
            id INTEGER PRIMARY KEY AUTOINCREMENT,
            name TEXT,
