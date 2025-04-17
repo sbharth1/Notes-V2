@@ -1,14 +1,12 @@
 import React from 'react';
 import Home from './src/pages/Home';
-import {Provider} from 'react-native-paper';
+import {PaperProvider} from 'react-native-paper';
 
 const App = () => {
   return (
-    <>
-      <Provider>
+      <PaperProvider>
         <Home />
-      </Provider>
-    </>
+      </PaperProvider>
   );
 };
 

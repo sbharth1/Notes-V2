@@ -49,28 +49,28 @@ const Content = () => {
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View style={styles.card}>
         {cardData.map((val, i) => (
-  <Card.Title
-    key={i}
+          <Card.Title
+          key={i}
     style={styles.maincard}
     title={val.name}
     subtitle={val.description}
     right={() => (
       <Menu
-        visible={activeMenu === i}
-        onDismiss={() => setActiveMenu(null)}
-        anchor={
-          <IconButton
-            icon="dots-vertical"
-            iconColor="black"
-            onPress={() => setActiveMenu(i)}
-          />
-        }>
+      visible={activeMenu === i}
+      onDismiss={() => setActiveMenu(null)}
+      anchor={
+        <IconButton
+        icon="dots-vertical"
+        iconColor="black"
+        onPress={() => setActiveMenu(i)}
+        />
+      }>
         <Menu.Item onPress={() => Alert.alert("Edit", val.name)} title="Edit" />
         <Menu.Item onPress={() => Alert.alert("Delete", val.name)} title="Delete" />
       </Menu>
     )}
-  />
-))}
+    />
+  ))}
         </View>
       </ScrollView>
 
