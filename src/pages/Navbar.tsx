@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { Text, TextInput } from 'react-native-paper';
+import React, {useState} from 'react';
+import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import {Text, TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Navbar = () => {
@@ -27,7 +27,7 @@ const Navbar = () => {
         </View>
         <TouchableOpacity onPress={toggleDarkMode}>
           <Icon
-            name={darkMode ? "weather-night": "weather-sunny"}
+            name={darkMode ? 'weather-night' : 'weather-sunny'}
             size={24}
             color="white"
           />

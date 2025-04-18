@@ -5,7 +5,7 @@ import {getAllNote, Note} from '../database/userQueries';
 import {useEffect, useState} from 'react';
 
 const Home = () => {
-  const [allnote, setAllNote] = useState<Note[]>();
+  const [allnote, setAllNote] = useState<Note[]>([]);
 
   useEffect(() => {
     const run = async () => {
@@ -13,7 +13,6 @@ const Home = () => {
         const db = await initDB();
         const notes = await getAllNote(db);
         setAllNote(notes);
-        console.log('----Notes:', allnote);
       } catch (e) {
         console.error('--- db error', e);
       }
@@ -21,10 +20,11 @@ const Home = () => {
     run();
   }, []);
 
+
   return (
     <>
       <Navbar />
-      <Content allnote={allnote}/>
+      <Content allnote={allnote} />
     </>
   );
 };

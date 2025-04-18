@@ -8,76 +8,91 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {Card, IconButton,Menu} from 'react-native-paper';
+import {Card, IconButton, Menu} from 'react-native-paper';
 import ViewModal from '../modal/Modal';
-import { Note } from '../database/userQueries';
+import {deleteNote, Note} from '../database/userQueries';
+import {initDB} from '../database';
 
 interface props {
-  allnote?:Note[];
+  allnote?: Note[];
 }
 
-const Content:React.FC<props> = ({allnote}) => {
-  const [cardData, setCardData] = useState<Note[] | undefined>([]);
+const Content: React.FC<props> = ({allnote}) => {
+  const [cardData, setCardData] = useState<Note[] | []>();
   const [visible, setVisible] = useState(false);
   const hideModal = () => setVisible(false);
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
 
+  const onDeleteNote = async (id: number) => {
+    const db = await initDB();
+    await deleteNote(db,id) 
+    console.log(id);
+  };
 
+  const onEditNote = async (id: number) => {
+    const db = await initDB();
+    console.log(id);
+  };
 
   useEffect(() => {
     const setData = async () => {
       try {
-         setCardData(allnote)
+        setCardData(allnote);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
     setData();
-  }, []);
-  
+  }, [onDeleteNote, onEditNote]);
+
   return (
     <View style={styles.container}>
       {/* Modal  */}
-      <ViewModal hideModal={hideModal} visible={visible}/>
+      <ViewModal hideModal={hideModal} visible={visible} />
 
       {/* Content  */}
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View style={styles.card}>
-        {cardData?.map((val, i) => (
-          <Card.Title
-          key={i}
-    style={styles.maincard}
-    title={val.title}
-    subtitle={val.note}
-    right={() => (
-      <Menu
-      visible={activeMenu === i}
-      onDismiss={() => setActiveMenu(null)}
-      anchor={
-        <IconButton
-        icon="dots-vertical"
-        iconColor="black"
-        onPress={() => setActiveMenu(i)}
-        />
-      }>
-        <Menu.Item style={styles.menuitem} onPress={() => Alert.alert("Edit", val.name)} title="Edit" />
-        <Menu.Item style={styles.menuitem} onPress={() => Alert.alert("Delete", val.name)} title="Delete" />
-      </Menu>
-    )}
-    />
-  ))}
+          {cardData?.map((val, i) => (
+            <Card.Title
+              key={i}
+              style={styles.maincard}
+              title={val.title}
+              subtitle={val.note}
+              right={() => (
+                <Menu
+                  visible={activeMenu === i}
+                  onDismiss={() => setActiveMenu(null)}
+                  anchor={
+                    <IconButton
+                      icon="dots-vertical"
+                      iconColor="black"
+                      onPress={() => setActiveMenu(i)}
+                    />
+                  }>
+                  <Menu.Item
+                    style={styles.menuitem}
+                    onPress={() => onEditNote(val.id)}
+                    title="Edit"
+                  />
+                  <Menu.Item
+                    style={styles.menuitem}
+                    onPress={() => onDeleteNote(val.id)}
+                    title="Delete"
+                  />
+                </Menu>
+              )}
+            />
+          ))}
         </View>
       </ScrollView>
 
-      <TouchableOpacity
-        style={styles.fab}
-        onPress={() => setVisible(true)}>
+      <TouchableOpacity style={styles.fab} onPress={() => setVisible(true)}>
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>
     </View>
   );
 };
-
 
 export default Content;
 
@@ -121,7 +136,5 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
   },
-  menuitem:{
-  }
-
+  menuitem: {},
 });
