@@ -105,7 +105,7 @@ const Content: React.FC<Props> = ({allnote}) => {
         showProgress={false}
         title="Confirm Delete"
         message="Are you sure you want to delete this note?"
-        closeOnTouchOutside={true}
+        closeOnTouchOutside={false}
         closeOnHardwareBackPress={false}
         showConfirmButton={true}
         showCancelButton={true}
