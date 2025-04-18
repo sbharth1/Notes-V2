@@ -8,7 +8,7 @@ let db:SQLiteDatabase;
 
 export const initDB = async () => {
   if (db) return db;
-  db = await SQLite.openDatabase({ name: 'mydb.db', location: 'default' });
+  db = await SQLite.openDatabase({ name: 'notes.db', location: 'default' });
   await createTables(db);
   return db;
 };

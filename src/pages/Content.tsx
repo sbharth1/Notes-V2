@@ -10,14 +10,14 @@ import {
 } from 'react-native';
 import {Card, IconButton,Menu} from 'react-native-paper';
 import ViewModal from '../modal/Modal';
+import { Note } from '../database/userQueries';
 
-interface CardData {
-  name: string;
-  description: string;
+interface props {
+  allnote?:Note[];
 }
 
-const Content = () => {
-  const [cardData, setCardData] = useState<CardData[]>([]);
+const Content:React.FC<props> = ({allnote}) => {
+  const [cardData, setCardData] = useState<Note[] | undefined>([]);
   const [visible, setVisible] = useState(false);
   const hideModal = () => setVisible(false);
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
@@ -27,12 +27,7 @@ const Content = () => {
   useEffect(() => {
     const setData = async () => {
       try {
-        const res = await fetch(
-          'https://67c937330acf98d0708941b3.mockapi.io/demo/fakeusers',
-        );
-        const data = await res.json();
-        console.log('Fetched Data:', data);
-        setCardData(data);
+         setCardData(allnote)
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -48,12 +43,12 @@ const Content = () => {
       {/* Content  */}
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View style={styles.card}>
-        {cardData.map((val, i) => (
+        {cardData?.map((val, i) => (
           <Card.Title
           key={i}
     style={styles.maincard}
-    title={val.name}
-    subtitle={val.description}
+    title={val.title}
+    subtitle={val.note}
     right={() => (
       <Menu
       visible={activeMenu === i}
@@ -65,8 +60,8 @@ const Content = () => {
         onPress={() => setActiveMenu(i)}
         />
       }>
-        <Menu.Item onPress={() => Alert.alert("Edit", val.name)} title="Edit" />
-        <Menu.Item onPress={() => Alert.alert("Delete", val.name)} title="Delete" />
+        <Menu.Item style={styles.menuitem} onPress={() => Alert.alert("Edit", val.name)} title="Edit" />
+        <Menu.Item style={styles.menuitem} onPress={() => Alert.alert("Delete", val.name)} title="Delete" />
       </Menu>
     )}
     />
@@ -105,7 +100,7 @@ const styles = StyleSheet.create({
   },
   maincard: {
     width: '80%',
-    backgroundColor: '#c5ec69',
+    backgroundColor: 'gray',
     borderRadius: 10,
     margin: 5,
   },
@@ -126,5 +121,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
   },
+  menuitem:{
+  }
 
 });

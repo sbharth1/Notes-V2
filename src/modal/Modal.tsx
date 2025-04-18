@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Modal, Portal, Text, Button, PaperProvider } from 'react-native-paper';
+import { Modal, Portal, Text} from 'react-native-paper';
 
 const ViewModal = ({visible,hideModal}:any) => {
   
