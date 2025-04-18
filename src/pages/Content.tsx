@@ -1,61 +1,64 @@
 import {useEffect, useState} from 'react';
-
+import AwesomeAlert from 'react-native-awesome-alerts';
 import {
   Text,
   StyleSheet,
   View,
   ScrollView,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import {Card, IconButton, Menu} from 'react-native-paper';
 import ViewModal from '../modal/Modal';
 import {deleteNote, Note} from '../database/userQueries';
 import {initDB} from '../database';
 
-interface props {
+interface Props {
   allnote?: Note[];
 }
 
-const Content: React.FC<props> = ({allnote}) => {
-  const [cardData, setCardData] = useState<Note[] | []>();
+const Content: React.FC<Props> = ({allnote}) => {
+  const [cardData, setCardData] = useState<Note[]>([]);
   const [visible, setVisible] = useState(false);
   const hideModal = () => setVisible(false);
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const [actionNoteId, setActionNoteId] = useState<number | null>(null);
 
-  const onDeleteNote = async (id: number) => {
-    const db = await initDB();
-    await deleteNote(db,id) 
-    console.log(id);
+  const handleDelete = (id: number) => {
+    setActionNoteId(id);
+    setShowAlert(true);
+  };
+
+  const confirmDelete = async () => {
+    if (actionNoteId !== null) {
+      const db = await initDB();
+      await deleteNote(db, actionNoteId);
+      const updatedNotes = cardData.filter(note => note.id !== actionNoteId);
+      setCardData(updatedNotes);
+      setShowAlert(false);
+      setActionNoteId(null);
+    }
   };
 
   const onEditNote = async (id: number) => {
     const db = await initDB();
-    console.log(id);
+    console.log('Editing note:', id);
+
   };
 
   useEffect(() => {
-    const setData = async () => {
-      try {
-        setCardData(allnote);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    setData();
-  }, [onDeleteNote, onEditNote]);
+    setCardData(allnote || []);
+  }, [allnote]);
 
   return (
     <View style={styles.container}>
-      {/* Modal  */}
       <ViewModal hideModal={hideModal} visible={visible} />
 
-      {/* Content  */}
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View style={styles.card}>
-          {cardData?.map((val, i) => (
+          {cardData.map((val, i) => (
             <Card.Title
-              key={i}
+              key={val.id}
               style={styles.maincard}
               title={val.title}
               subtitle={val.note}
@@ -72,12 +75,18 @@ const Content: React.FC<props> = ({allnote}) => {
                   }>
                   <Menu.Item
                     style={styles.menuitem}
-                    onPress={() => onEditNote(val.id)}
+                    onPress={() => {
+                      setActiveMenu(null);
+                      onEditNote(val.id);
+                    }}
                     title="Edit"
                   />
                   <Menu.Item
                     style={styles.menuitem}
-                    onPress={() => onDeleteNote(val.id)}
+                    onPress={() => {
+                      setActiveMenu(null);
+                      handleDelete(val.id);
+                    }}
                     title="Delete"
                   />
                 </Menu>
@@ -90,6 +99,26 @@ const Content: React.FC<props> = ({allnote}) => {
       <TouchableOpacity style={styles.fab} onPress={() => setVisible(true)}>
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>
+
+      <AwesomeAlert
+        show={showAlert}
+        showProgress={false}
+        title="Confirm Delete"
+        message="Are you sure you want to delete this note?"
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showConfirmButton={true}
+        showCancelButton={true}
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
+        cancelButtonColor="red"
+        confirmButtonColor="green"
+        onConfirmPressed={confirmDelete}
+        onCancelPressed={() => {
+          setShowAlert(false);
+          setActionNoteId(null);
+        }}
+      />
     </View>
   );
 };

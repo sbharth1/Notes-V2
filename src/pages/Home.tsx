@@ -1,7 +1,7 @@
 import Navbar from './Navbar';
 import Content from './Content';
 import {initDB} from '../database';
-import {getAllNote, Note} from '../database/userQueries';
+import {addNote, getAllNote, Note} from '../database/userQueries';
 import {useEffect, useState} from 'react';
 
 const Home = () => {
@@ -12,6 +12,7 @@ const Home = () => {
       try {
         const db = await initDB();
         const notes = await getAllNote(db);
+        await addNote(db,'fake','long','nothing!!')
         setAllNote(notes);
       } catch (e) {
         console.error('--- db error', e);
