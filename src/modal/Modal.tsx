@@ -8,7 +8,7 @@ import {addNote} from '../database/userQueries';
 import {useNoteProvider} from '../store/NoteProivder';
 
 const ViewModal = () => {
-  const {hideModal, visible, headModal} = useNoteProvider();
+  const {hideModal, visible, headModal, singleUserData} = useNoteProvider();
   const validationSchema = Yup.object({
     title: Yup.string()
       .required('Title is required')
@@ -38,22 +38,36 @@ const ViewModal = () => {
         <Text style={styles.modalHeader}>{headModal}</Text>
 
         <TextInput
-          value={formik.values.title}
+          value={
+            headModal === 'Add Note'
+              ? formik.values.title
+              : singleUserData?.length
+              ? singleUserData[0]?.title
+              : null
+          }
           onChangeText={formik.handleChange('title')}
           onBlur={formik.handleBlur('title')}
           style={styles.input1}
           placeholder="TITLE"
+          readOnly={headModal === 'User Note' ? true : false}
         />
         {formik.touched.title && formik.errors.title ? (
           <Text style={styles.errorText}>{formik.errors.title}</Text>
         ) : null}
 
         <TextInput
-          value={formik.values.note}
+          value={
+            headModal === 'Add Note'
+              ? formik.values.note
+              : singleUserData?.length
+              ? singleUserData[0]?.note
+              : null
+          }
           onChangeText={formik.handleChange('note')}
           onBlur={formik.handleBlur('note')}
           style={styles.input2}
           placeholder="NOTE..."
+          readOnly={headModal === 'User Note' ? true : false}
           multiline
         />
         {formik.touched.note && formik.errors.note ? (
@@ -70,7 +84,9 @@ const ViewModal = () => {
                 formik.handleSubmit();
               }}
               disabled={formik.isSubmitting}
-              style={styles.saveBtn}>Save</Button>
+              style={styles.saveBtn}>
+              Save
+            </Button>
           ) : null}
 
           <Button

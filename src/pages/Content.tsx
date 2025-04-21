@@ -22,8 +22,7 @@ const Content: React.FC<Props> = () => {
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [actionNoteId, setActionNoteId] = useState<number | null>(null);
-  const [singleUserId, setSingleUserId] = useState<number | null>(null);
-  const {allnote,visible,hideModal,setVisible,setHeadModal} = useNoteProvider();
+  const {allnote,visible,setVisible,setHeadModal,setSingleUserData} = useNoteProvider();
 
   const handleDelete = (id: number) => {
     setActionNoteId(id);
@@ -46,9 +45,10 @@ const Content: React.FC<Props> = () => {
     console.log('Editing note:', id);
   };
 
-  const SpecificUser = (id: number) => {
-    console.log(id, '---id form specific user');
+  const SpecificUser = async(id: number) => {
     setHeadModal("User Note")
+    const user = cardData.filter((userId)=> userId.id === id);
+    setSingleUserData(user)
     setVisible(!visible)
   };
 

@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import { Note } from "../database/userQueries";
 
 export type noteType  = {
@@ -10,4 +9,6 @@ export type noteType  = {
     hideModal: ()=> void,
     headModal:string,
     setHeadModal:React.Dispatch<React.SetStateAction<string>>,
+    singleUserData: Note[] | null;
+    setSingleUserData:React.Dispatch<React.SetStateAction<Note[] | null>>
 } | null;
