@@ -11,10 +11,9 @@ const ViewModal = ({visible, hideModal}: any) => {
       title: '',
       note: '',
     },
-    onSubmit: async (values,{resetForm}) => {
+    onSubmit: async (values, {resetForm}) => {
       const db = await initDB();
-     const res =  await addNote(db, 'sid', values.title, values.note);
-      console.log('Form Submitted:', res);
+      const res = await addNote(db, 'sid', values.title, values.note);
       hideModal();
       resetForm();
     },
@@ -43,11 +42,17 @@ const ViewModal = ({visible, hideModal}: any) => {
           multiline
         />
 
+        {/* <Button
+          mode="contained"
+          onPress={() => formik.handleSubmit()}
+          style={{marginTop: 10, backgroundColor: '#000'}}>
+          Save
+        </Button> */}
+
         <Button
           mode="contained"
           onPress={() => formik.handleSubmit()}
-          style={{marginTop: 10}}
-          contentStyle={{paddingVertical: 5}}>
+          style={{marginTop: 10}}>
           Save
         </Button>
       </Modal>

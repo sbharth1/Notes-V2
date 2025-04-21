@@ -48,7 +48,7 @@ const Content: React.FC<Props> = ({allnote}) => {
 
   useEffect(() => {
     setCardData(allnote || []);
-  }, [allnote,cardData]);
+  }, [allnote]);
 
   return (
     <View style={styles.container}>
