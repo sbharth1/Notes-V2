@@ -11,7 +11,7 @@ import {Card, IconButton, Menu} from 'react-native-paper';
 import ViewModal from '../modal/Modal';
 import {deleteNote, Note} from '../database/userQueries';
 import {initDB} from '../database';
-import { useNoteProvider } from '../store/NoteProivder';
+import {useNoteProvider} from '../store/NoteProivder';
 
 interface Props {
   allnote?: Note[];
@@ -19,12 +19,11 @@ interface Props {
 
 const Content: React.FC<Props> = () => {
   const [cardData, setCardData] = useState<Note[]>([]);
-  const [visible, setVisible] = useState(false);
-  const hideModal = () => setVisible(false);
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [actionNoteId, setActionNoteId] = useState<number | null>(null);
-  const {allnote} = useNoteProvider();
+  const [singleUserId, setSingleUserId] = useState<number | null>(null);
+  const {allnote,visible,hideModal,setVisible,setHeadModal} = useNoteProvider();
 
   const handleDelete = (id: number) => {
     setActionNoteId(id);
@@ -45,7 +44,12 @@ const Content: React.FC<Props> = () => {
   const onEditNote = async (id: number) => {
     const db = await initDB();
     console.log('Editing note:', id);
+  };
 
+  const SpecificUser = (id: number) => {
+    console.log(id, '---id form specific user');
+    setHeadModal("User Note")
+    setVisible(!visible)
   };
 
   useEffect(() => {
@@ -55,51 +59,53 @@ const Content: React.FC<Props> = () => {
   return (
     <View style={styles.container}>
       {/* modal  */}
-      <ViewModal hideModal={hideModal} visible={visible} />
+      <ViewModal/>
 
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View style={styles.card}>
           {cardData.map((val, i) => (
-            <Card.Title
-              key={val.id}
-              style={styles.maincard}
-              title={val.title}
-              subtitle={val.note}
-              right={() => (
-                <Menu
+            <TouchableOpacity key={i} onPress={() => SpecificUser(val.id)}>
+              <Card.Title
+                key={i}
+                style={styles.maincard}
+                title={val.title}
+                subtitle={val.note}
+                right={() => (
+                  <Menu
                   visible={activeMenu === i}
                   onDismiss={() => setActiveMenu(null)}
                   anchor={
                     <IconButton
-                      icon="dots-vertical"
-                      iconColor="black"
-                      onPress={() => setActiveMenu(i)}
+                    icon="dots-vertical"
+                    iconColor="black"
+                    onPress={() => setActiveMenu(i)}
                     />
                   }>
-                  <Menu.Item
-                    style={styles.menuitem}
-                    onPress={() => {
-                      setActiveMenu(null);
-                      onEditNote(val.id);
-                    }}
-                    title="Edit"
-                  />
-                  <Menu.Item
-                    style={styles.menuitem}
-                    onPress={() => {
-                      setActiveMenu(null);
-                      handleDelete(val.id);
-                    }}
-                    title="Delete"
-                  />
-                </Menu>
-              )}
-            />
+                    <Menu.Item
+                      style={styles.menuitem}
+                      onPress={() => {
+                        setActiveMenu(null);
+                        onEditNote(val.id);
+                      }}
+                      title="Edit"
+                      />
+                    <Menu.Item
+                      style={styles.menuitem}
+                      onPress={() => {
+                        setActiveMenu(null);
+                        handleDelete(val.id);
+                      }}
+                      title="Delete"
+                      />
+                  </Menu>
+                )}
+                />
+            </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
 
-      <TouchableOpacity style={styles.fab} onPress={() => setVisible(true)}>
+      <TouchableOpacity style={styles.fab} onPress={() => {setVisible(true),setHeadModal("Add Note")}}>
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>
 

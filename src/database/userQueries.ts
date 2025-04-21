@@ -45,3 +45,15 @@ export const deleteNote = async (
 ): Promise<void> => {
   await db.executeSql(`DELETE FROM notes WHERE id = ?;`, [id]);
 };
+
+
+export const specificNote = async (
+  db: SQLiteDatabase,
+  id: number,
+): Promise<Note[] | null> => {
+  const res = await db.executeSql(`SLECT * FROM notes WHERE id = ?;`, [id]);
+  if(res[0].rows.length > 0){
+    return res[0].rows.item(0)
+  }
+  return null;
+};

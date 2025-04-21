@@ -8,6 +8,12 @@ const AuthContext = createContext<noteType>(null);
 export const AuthProvider = ({ children }:any) => {
   const [user, setUser] = useState<number>(50000);
   const [allnote, setAllNote] = useState<Note[]>([]);
+  const [visible, setVisible] = useState(false);
+  const [headModal,setHeadModal] = useState<string>("Add Modal")
+  const hideModal = () => setVisible(false);
+
+
+
 
 //   to get all notes 
   useEffect(() => {
@@ -26,14 +32,14 @@ export const AuthProvider = ({ children }:any) => {
 
 
   return (
-    <AuthContext.Provider value={{ user, setUser,allnote }}>
+    <AuthContext.Provider value={{ user, setUser,allnote,visible,hideModal,setVisible,setHeadModal,headModal }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useNoteProvider = () => {
-  const context = useContext(AuthContext);
+  const context = useContext(AuthContext);  
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }

@@ -5,7 +5,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Navbar = () => {
   const [darkMode, setDarkMode] = useState(false);
-
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };

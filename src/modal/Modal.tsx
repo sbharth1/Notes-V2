@@ -5,8 +5,10 @@ import {useFormik} from 'formik';
 import * as Yup from 'yup';
 import {initDB} from '../database';
 import {addNote} from '../database/userQueries';
+import {useNoteProvider} from '../store/NoteProivder';
 
-const ViewModal = ({visible, hideModal}: any) => {
+const ViewModal = () => {
+  const {hideModal, visible, headModal} = useNoteProvider();
   const validationSchema = Yup.object({
     title: Yup.string()
       .required('Title is required')
@@ -33,53 +35,55 @@ const ViewModal = ({visible, hideModal}: any) => {
   return (
     <Portal>
       <Modal visible={visible} contentContainerStyle={styles.mainModal}>
-          <Text style={styles.modalHeader}>Add Note</Text>
+        <Text style={styles.modalHeader}>{headModal}</Text>
 
-          <TextInput
-            value={formik.values.title}
-            onChangeText={formik.handleChange('title')}
-            onBlur={formik.handleBlur('title')}
-            style={styles.input1}
-            placeholder="TITLE"
-          />
-          {formik.touched.title && formik.errors.title ? (
-            <Text style={styles.errorText}>{formik.errors.title}</Text>
-          ) : null}
+        <TextInput
+          value={formik.values.title}
+          onChangeText={formik.handleChange('title')}
+          onBlur={formik.handleBlur('title')}
+          style={styles.input1}
+          placeholder="TITLE"
+        />
+        {formik.touched.title && formik.errors.title ? (
+          <Text style={styles.errorText}>{formik.errors.title}</Text>
+        ) : null}
 
-          <TextInput
-            value={formik.values.note}
-            onChangeText={formik.handleChange('note')}
-            onBlur={formik.handleBlur('note')}
-            style={styles.input2}
-            placeholder="NOTE..."
-            multiline
-          />
-          {formik.touched.note && formik.errors.note ? (
-            <Text style={styles.errorText}>{formik.errors.note}</Text>
-          ) : null}
+        <TextInput
+          value={formik.values.note}
+          onChangeText={formik.handleChange('note')}
+          onBlur={formik.handleBlur('note')}
+          style={styles.input2}
+          placeholder="NOTE..."
+          multiline
+        />
+        {formik.touched.note && formik.errors.note ? (
+          <Text style={styles.errorText}>{formik.errors.note}</Text>
+        ) : null}
 
-          <View style={styles.buttonContainer}>
+        <View style={styles.buttonContainer}>
+          {headModal === 'Add Note' ? (
             <Button
               mode="contained"
               buttonColor="green"
               textColor="#fff"
-              onPress={() => {formik.handleSubmit()}}
-              disabled={formik.isSubmitting}
-              style={styles.saveBtn}>
-              Save
-            </Button>
-
-            <Button
-              mode="outlined"
-              textColor="#000"
               onPress={() => {
-                formik.resetForm();
-                hideModal();
+                formik.handleSubmit();
               }}
-              style={styles.cancelBtn}>
-              Cancel
-            </Button>
-          </View>
+              disabled={formik.isSubmitting}
+              style={styles.saveBtn}>Save</Button>
+          ) : null}
+
+          <Button
+            mode="outlined"
+            textColor="#000"
+            onPress={() => {
+              formik.resetForm();
+              hideModal();
+            }}
+            style={styles.cancelBtn}>
+            Cancel
+          </Button>
+        </View>
       </Modal>
     </Portal>
   );
