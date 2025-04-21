@@ -1,10 +1,19 @@
-import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
-import {Button, Modal, Portal, Text, TextInput} from 'react-native-paper';
+import React from 'react';
+import {StyleSheet,TextInput} from 'react-native';
+import {Button, Modal, Portal, Text} from 'react-native-paper';
+import {useFormik} from 'formik';   
 
 const ViewModal = ({visible, hideModal}: any) => {
-  const [title, setTitle] = useState('');
-  const [note, setNote] = useState('');
+  const formik = useFormik({
+    initialValues: {
+      title: '',
+      note: '',
+    },
+    onSubmit: values => {
+      console.log('Form Submitted:', values);
+      hideModal();
+    },
+  });
 
   return (
     <Portal>
@@ -13,27 +22,25 @@ const ViewModal = ({visible, hideModal}: any) => {
         onDismiss={hideModal}
         contentContainerStyle={styles.mainModal}>
         <Text style={styles.modalHeader}>Add Note</Text>
+
         <TextInput
-          label="Title"
-          value={title}
-          onChangeText={setTitle}
+          value={formik.values.title}
+          onChangeText={formik.handleChange('title')}
           style={styles.input}
-          mode="outlined"
+          placeholder='TITLE'
         />
+
         <TextInput
-          label="Note"
-          value={note}
-          onChangeText={setNote}
+          value={formik.values.note}
+          onChangeText={formik.handleChange('note')}
           style={styles.input}
-          mode="outlined"
+          placeholder='NOTE...'
           multiline
         />
+
         <Button
           mode="contained"
-          onPress={() => {
-            console.log({title, note});
-            hideModal();
-          }}
+          onPress={()=>formik.handleSubmit()}
           style={{marginTop: 10}}
           contentStyle={{paddingVertical: 5}}>
           Save
@@ -53,13 +60,18 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '90%',
     maxWidth: 350,
-  },  
+  },
   modalHeader: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+    color:"#000",
   },
   input: {
     marginBottom: 15,
+    backgroundColor:"#000",
+    color:"#fff",
+   borderRadius:10,
+   paddingLeft:10
   },
 });

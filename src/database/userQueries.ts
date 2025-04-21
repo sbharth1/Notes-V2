@@ -24,7 +24,6 @@ export const addNote = async (
 export const getAllNote = async (db: SQLiteDatabase): Promise<Note[]> => {
   const results = await db.executeSql('SELECT * FROM notes;');
   const rows = results[0].rows.raw();
-  console.log(rows)
   return rows;
 };
 

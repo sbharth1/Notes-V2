@@ -1,7 +1,7 @@
 import SQLite from "react-native-sqlite-storage";
 import { SQLiteDatabase } from 'react-native-sqlite-storage';
 
-import { createTables } from "./schema";
+import { createTables } from "./schema";    
 SQLite.enablePromise(true);
 
 let db:SQLiteDatabase;
