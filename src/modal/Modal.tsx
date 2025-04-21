@@ -39,7 +39,7 @@ const ViewModal = ({visible, hideModal}: any) => {
             value={formik.values.title}
             onChangeText={formik.handleChange('title')}
             onBlur={formik.handleBlur('title')}
-            style={styles.input}
+            style={styles.input1}
             placeholder="TITLE"
           />
           {formik.touched.title && formik.errors.title ? (
@@ -50,7 +50,7 @@ const ViewModal = ({visible, hideModal}: any) => {
             value={formik.values.note}
             onChangeText={formik.handleChange('note')}
             onBlur={formik.handleBlur('note')}
-            style={styles.input}
+            style={styles.input2}
             placeholder="NOTE..."
             multiline
           />
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: '#000',
   },
-  input: {
+  input1: {
     marginBottom: 5,
     backgroundColor: '#000',
     color: '#fff',
@@ -108,6 +108,15 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     padding: 10,
     height: 40,
+  },
+  input2: {
+    marginBottom: 5,
+    backgroundColor: '#000',
+    color: '#fff',
+    borderRadius: 10,
+    paddingLeft: 10,
+    padding: 10,
+    height: 60,
   },
   errorText: {
     color: 'red',
