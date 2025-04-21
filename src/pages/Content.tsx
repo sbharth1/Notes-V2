@@ -11,18 +11,20 @@ import {Card, IconButton, Menu} from 'react-native-paper';
 import ViewModal from '../modal/Modal';
 import {deleteNote, Note} from '../database/userQueries';
 import {initDB} from '../database';
+import { useNoteProvider } from '../store/NoteProivder';
 
 interface Props {
   allnote?: Note[];
 }
 
-const Content: React.FC<Props> = ({allnote}) => {
+const Content: React.FC<Props> = () => {
   const [cardData, setCardData] = useState<Note[]>([]);
   const [visible, setVisible] = useState(false);
   const hideModal = () => setVisible(false);
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [actionNoteId, setActionNoteId] = useState<number | null>(null);
+  const {allnote} = useNoteProvider();
 
   const handleDelete = (id: number) => {
     setActionNoteId(id);

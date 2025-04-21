@@ -61,7 +61,9 @@ const ViewModal = ({visible, hideModal}: any) => {
           <View style={styles.buttonContainer}>
             <Button
               mode="contained"
-              onPress={()=> {formik.handleSubmit()}}
+              buttonColor="green"
+              textColor="#fff"
+              onPress={() => {formik.handleSubmit()}}
               disabled={formik.isSubmitting}
               style={styles.saveBtn}>
               Save
