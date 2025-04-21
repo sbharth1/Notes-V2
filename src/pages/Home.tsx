@@ -12,7 +12,6 @@ const Home = () => {
       try {
         const db = await initDB();
         const notes = await getAllNote(db);
-        await addNote(db,'fake','long','nothing!!')
         setAllNote(notes);
       } catch (e) {
         console.error('--- db error', e);
