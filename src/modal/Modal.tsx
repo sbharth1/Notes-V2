@@ -1,60 +1,83 @@
 import React from 'react';
-import {StyleSheet, TextInput} from 'react-native';
+import {StyleSheet, TextInput, View} from 'react-native';
 import {Button, Modal, Portal, Text} from 'react-native-paper';
 import {useFormik} from 'formik';
+import * as Yup from 'yup';
 import {initDB} from '../database';
 import {addNote} from '../database/userQueries';
 
 const ViewModal = ({visible, hideModal}: any) => {
+  const validationSchema = Yup.object({
+    title: Yup.string()
+      .required('Title is required')
+      .min(3, 'Title should be at least 3 characters'),
+    note: Yup.string()
+      .required('Note content is required')
+      .min(5, 'Note should be at least 5 characters'),
+  });
+
   const formik = useFormik({
     initialValues: {
       title: '',
       note: '',
     },
+    validationSchema,
     onSubmit: async (values, {resetForm}) => {
       const db = await initDB();
-      const res = await addNote(db, 'sid', values.title, values.note);
-      hideModal();
+      await addNote(db, 'userNotes', values.title, values.note);
       resetForm();
+      hideModal();
     },
   });
 
   return (
     <Portal>
-      <Modal
-        visible={visible}
-        onDismiss={hideModal}
-        contentContainerStyle={styles.mainModal}>
-        <Text style={styles.modalHeader}>Add Note</Text>
+      <Modal visible={visible} contentContainerStyle={styles.mainModal}>
+          <Text style={styles.modalHeader}>Add Note</Text>
 
-        <TextInput
-          value={formik.values.title}
-          onChangeText={formik.handleChange('title')}
-          style={styles.input}
-          placeholder="TITLE"
-        />
+          <TextInput
+            value={formik.values.title}
+            onChangeText={formik.handleChange('title')}
+            onBlur={formik.handleBlur('title')}
+            style={styles.input}
+            placeholder="TITLE"
+          />
+          {formik.touched.title && formik.errors.title ? (
+            <Text style={styles.errorText}>{formik.errors.title}</Text>
+          ) : null}
 
-        <TextInput
-          value={formik.values.note}
-          onChangeText={formik.handleChange('note')}
-          style={styles.input}
-          placeholder="NOTE..."
-          multiline
-        />
+          <TextInput
+            value={formik.values.note}
+            onChangeText={formik.handleChange('note')}
+            onBlur={formik.handleBlur('note')}
+            style={styles.input}
+            placeholder="NOTE..."
+            multiline
+          />
+          {formik.touched.note && formik.errors.note ? (
+            <Text style={styles.errorText}>{formik.errors.note}</Text>
+          ) : null}
 
-        {/* <Button
-          mode="contained"
-          onPress={() => formik.handleSubmit()}
-          style={{marginTop: 10, backgroundColor: '#000'}}>
-          Save
-        </Button> */}
+          <View style={styles.buttonContainer}>
+            <Button
+              mode="contained"
+              onPress={()=> {formik.handleSubmit()}}
+              disabled={formik.isSubmitting}
+              style={styles.saveBtn}>
+              Save
+            </Button>
 
-        <Button
-          mode="contained"
-          onPress={() => formik.handleSubmit()}
-          style={{marginTop: 10}}>
-          Save
-        </Button>
+            <Button
+              mode="outlined"
+              textColor="#000"
+              onPress={() => {
+                formik.resetForm();
+                hideModal();
+              }}
+              style={styles.cancelBtn}>
+              Cancel
+            </Button>
+          </View>
       </Modal>
     </Portal>
   );
@@ -78,10 +101,31 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   input: {
-    marginBottom: 15,
+    marginBottom: 5,
     backgroundColor: '#000',
     color: '#fff',
     borderRadius: 10,
     paddingLeft: 10,
+    padding: 10,
+    height: 40,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 10,
+    marginLeft: 5,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  saveBtn: {
+    flex: 1,
+    marginRight: 10,
+  },
+  cancelBtn: {
+    flex: 1,
+    marginLeft: 10,
   },
 });

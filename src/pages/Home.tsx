@@ -13,6 +13,7 @@ const Home = () => {
         const db = await initDB();
         const notes = await getAllNote(db);
         setAllNote(notes);
+        console.log(notes)
       } catch (e) {
         console.error('--- db error', e);
       }

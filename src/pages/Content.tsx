@@ -52,6 +52,7 @@ const Content: React.FC<Props> = ({allnote}) => {
 
   return (
     <View style={styles.container}>
+      {/* modal  */}
       <ViewModal hideModal={hideModal} visible={visible} />
 
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
@@ -105,8 +106,8 @@ const Content: React.FC<Props> = ({allnote}) => {
         showProgress={false}
         title="Confirm Delete"
         message="Are you sure you want to delete this note?"
-        closeOnTouchOutside={false}
-        closeOnHardwareBackPress={false}
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={true}
         showConfirmButton={true}
         showCancelButton={true}
         confirmText="Yes, Delete"
