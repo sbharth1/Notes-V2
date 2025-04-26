@@ -44,6 +44,8 @@ const Content: React.FC<Props> = () => {
         setShowAlert(false);
       }
     }
+    setActionNoteId(null);
+    setShowAlert(false);
   };
   
 
@@ -61,7 +63,7 @@ const Content: React.FC<Props> = () => {
 
   useEffect(() => {
     setCardData(allnote || []);
-  }, [allnote,cardData.length]);
+  }, [allnote ]);
 
   return (
     <View style={styles.container}>
@@ -79,13 +81,13 @@ const Content: React.FC<Props> = () => {
                 subtitle={val.note}
                 right={() => (
                   <Menu
-                  visible={activeMenu === i}
+                  visible={activeMenu === val.id}
                   onDismiss={() => setActiveMenu(null)}
                   anchor={
                     <IconButton
                     icon="dots-vertical"
                     iconColor="black"
-                    onPress={() => setActiveMenu(i)}
+                    onPress={() => setActiveMenu(val.id)}
                     />
                   }>
                     <Menu.Item
