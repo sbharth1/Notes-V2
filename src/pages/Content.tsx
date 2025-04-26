@@ -18,11 +18,11 @@ interface Props {
 }
 
 const Content: React.FC<Props> = () => {
-  const [cardData, setCardData] = useState<Note[]>([]);
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [actionNoteId, setActionNoteId] = useState<number | null>(null);
-  const {allnote,visible,setVisible,setHeadModal,setSingleUserData} = useNoteProvider();
+  const {allnote,visible,setVisible,setHeadModal,setSingleUserData,cardData,setCardData,darkMode,setDarkMode} = useNoteProvider();
+
 
   const handleDelete = (id: number) => {
     setActionNoteId(id);
@@ -33,7 +33,7 @@ const Content: React.FC<Props> = () => {
     if (actionNoteId !== null) {
       const db = await initDB();
       await deleteNote(db, actionNoteId);
-      const updatedNotes = cardData.filter(note => note.id !== actionNoteId);
+      const updatedNotes = cardData?.filter(note => note.id !== actionNoteId);
       setCardData(updatedNotes);
       setShowAlert(false);
       setActionNoteId(null);
@@ -47,7 +47,7 @@ const Content: React.FC<Props> = () => {
 
   const SpecificUser = async(id: number) => {
     setHeadModal("User Note")
-    const user = cardData.filter((userId)=> userId.id === id);
+    const user = cardData?.filter((userId)=> userId.id === id);
     setSingleUserData(user)
     setVisible(!visible)
   };
@@ -63,7 +63,7 @@ const Content: React.FC<Props> = () => {
 
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View style={styles.card}>
-          {cardData.map((val, i) => (
+          {cardData?.map((val, i) => (
             <TouchableOpacity key={i} onPress={() => SpecificUser(val.id)}>
               <Card.Title
                 key={i}

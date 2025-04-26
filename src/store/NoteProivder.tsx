@@ -8,9 +8,11 @@ const AuthContext = createContext<noteType>(null);
 export const AuthProvider = ({ children }:any) => {
   const [user, setUser] = useState<number>(50000);
   const [allnote, setAllNote] = useState<Note[]>([]);
+  const [cardData, setCardData] = useState<Note[]>([]);
   const [visible, setVisible] = useState(false);
   const [singleUserData, setSingleUserData] = useState<Note[] | null>(null);
   const [headModal,setHeadModal] = useState<string>("Add Modal")
+  const [darkMode, setDarkMode] = useState<boolean>(false);
   const hideModal = () => setVisible(false);
 
 
@@ -33,7 +35,7 @@ export const AuthProvider = ({ children }:any) => {
 
 
   return (
-    <AuthContext.Provider value={{ user, setUser,allnote,visible,hideModal,setVisible,setHeadModal,headModal,singleUserData,setSingleUserData }}>
+    <AuthContext.Provider value={{ user, setUser,allnote,visible,hideModal,setVisible,setHeadModal,headModal,singleUserData,setSingleUserData,cardData,setCardData,darkMode,setDarkMode }}>
       {children}
     </AuthContext.Provider>
   );

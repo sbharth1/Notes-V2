@@ -39,11 +39,11 @@ const ViewModal = () => {
 
         <TextInput
           value={
-            headModal === 'Add Note'
+            headModal === 'Add Note'  
               ? formik.values.title
               : singleUserData?.length
               ? singleUserData[0]?.title
-              : null
+              : ""
           }
           onChangeText={formik.handleChange('title')}
           onBlur={formik.handleBlur('title')}
@@ -61,7 +61,7 @@ const ViewModal = () => {
               ? formik.values.note
               : singleUserData?.length
               ? singleUserData[0]?.note
-              : null
+              : "" 
           }
           onChangeText={formik.handleChange('note')}
           onBlur={formik.handleBlur('note')}

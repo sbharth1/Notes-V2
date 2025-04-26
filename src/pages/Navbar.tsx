@@ -2,11 +2,13 @@ import React, {useState} from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import {Text, TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNoteProvider } from '../store/NoteProivder';
 
 const Navbar = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const {darkMode, setDarkMode} = useNoteProvider();
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
+    console.log('Dark mode toggled:', !darkMode);
   };
 
   return (
@@ -17,7 +19,7 @@ const Navbar = () => {
         </View>
         <View style={styles.searchbar}>
           <TextInput
-            placeholder="search..."
+            placeholder="search by title..."
             style={styles.mainsearchbar}
             underlineColor="transparent"
             mode="flat"
