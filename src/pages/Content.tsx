@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {Card, IconButton, Menu} from 'react-native-paper';
 import ViewModal from '../modal/Modal';
-import {deleteNote, Note} from '../database/userQueries';
+import {deleteNote, getAllNote, Note} from '../database/userQueries';
 import {initDB} from '../database';
 import {useNoteProvider} from '../store/NoteProivder';
 
@@ -23,22 +23,29 @@ const Content: React.FC<Props> = () => {
   const [actionNoteId, setActionNoteId] = useState<number | null>(null);
   const {allnote,visible,setVisible,setHeadModal,setSingleUserData,cardData,setCardData,darkMode,setDarkMode} = useNoteProvider();
 
-
   const handleDelete = (id: number) => {
     setActionNoteId(id);
     setShowAlert(true);
   };
+  console.log(actionNoteId, 'actionNoteId');
+
 
   const confirmDelete = async () => {
     if (actionNoteId !== null) {
-      const db = await initDB();
-      await deleteNote(db, actionNoteId);
-      const updatedNotes = cardData?.filter(note => note.id !== actionNoteId);
-      setCardData(updatedNotes);
-      setShowAlert(false);
-      setActionNoteId(null);
+      try {
+        const db = await initDB();
+        await deleteNote(db, actionNoteId);
+        const updatedNotes = await getAllNote(db);
+        setCardData(updatedNotes);
+      } catch (err) {
+        console.error("Delete failed", err);
+      } finally {
+        setActionNoteId(null);
+        setShowAlert(false);
+      }
     }
   };
+  
 
   const onEditNote = async (id: number) => {
     const db = await initDB();
@@ -54,7 +61,7 @@ const Content: React.FC<Props> = () => {
 
   useEffect(() => {
     setCardData(allnote || []);
-  }, [allnote]);
+  }, [allnote,cardData.length]);
 
   return (
     <View style={styles.container}>

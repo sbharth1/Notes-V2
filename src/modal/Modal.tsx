@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {use, useEffect} from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import {Button, Modal, Portal, Text} from 'react-native-paper';
 import {useFormik} from 'formik';
@@ -8,7 +8,7 @@ import {addNote} from '../database/userQueries';
 import {useNoteProvider} from '../store/NoteProivder';
 
 const ViewModal = () => {
-  const {hideModal, visible, headModal, singleUserData} = useNoteProvider();
+  const {hideModal, visible, headModal, singleUserData,addNewNote} = useNoteProvider();
   const validationSchema = Yup.object({
     title: Yup.string()
       .required('Title is required')
@@ -21,12 +21,15 @@ const ViewModal = () => {
   const formik = useFormik({
     initialValues: {
       title: '',
-      note: '',
+      note: '', 
     },
     validationSchema,
     onSubmit: async (values, {resetForm}) => {
       const db = await initDB();
-      await addNote(db, 'userNotes', values.title, values.note);
+      const id = await addNote(db, 'userNotes', values.title, values.note);
+      if (id) {
+        addNewNote({id, title: values.title, note:values.note})
+      }
       resetForm();
       hideModal();
     },
@@ -39,11 +42,11 @@ const ViewModal = () => {
 
         <TextInput
           value={
-            headModal === 'Add Note'  
+            headModal === 'Add Note'
               ? formik.values.title
               : singleUserData?.length
               ? singleUserData[0]?.title
-              : ""
+              : ''
           }
           onChangeText={formik.handleChange('title')}
           onBlur={formik.handleBlur('title')}
@@ -61,7 +64,7 @@ const ViewModal = () => {
               ? formik.values.note
               : singleUserData?.length
               ? singleUserData[0]?.note
-              : "" 
+              : ''
           }
           onChangeText={formik.handleChange('note')}
           onBlur={formik.handleBlur('note')}

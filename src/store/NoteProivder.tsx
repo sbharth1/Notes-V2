@@ -6,7 +6,6 @@ import { initDB } from '../database';
 const AuthContext = createContext<noteType>(null);
 
 export const AuthProvider = ({ children }:any) => {
-  const [user, setUser] = useState<number>(50000);
   const [allnote, setAllNote] = useState<Note[]>([]);
   const [cardData, setCardData] = useState<Note[]>([]);
   const [visible, setVisible] = useState(false);
@@ -16,16 +15,20 @@ export const AuthProvider = ({ children }:any) => {
   const hideModal = () => setVisible(false);
 
 
-
+  const addNewNote = (note: Note) => {
+    setAllNote(prev => [note, ...prev]);
+    setCardData(prev => [note, ...prev]);
+  };
+  
 
 //   to get all notes 
   useEffect(() => {
     const run = async () => {
       try {
         const db = await initDB();
-        const notes = await getAllNote(db);
+       const notes = await getAllNote(db);
         setAllNote(notes);
-        console.log(notes)
+        console.log(notes,'--notes--')
       } catch (e) {
         console.error('--- db error', e);
       }
@@ -35,7 +38,7 @@ export const AuthProvider = ({ children }:any) => {
 
 
   return (
-    <AuthContext.Provider value={{ user, setUser,allnote,visible,hideModal,setVisible,setHeadModal,headModal,singleUserData,setSingleUserData,cardData,setCardData,darkMode,setDarkMode }}>
+    <AuthContext.Provider value={{allnote,visible,hideModal,setVisible,setHeadModal,headModal,singleUserData,setSingleUserData,cardData,setCardData,darkMode,setDarkMode,addNewNote }}>
       {children}
     </AuthContext.Provider>
   );

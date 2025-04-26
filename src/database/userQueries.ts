@@ -2,24 +2,36 @@ import {SQLiteDatabase} from 'react-native-sqlite-storage';
 
 export interface Note {
   id: number;
-  name: string;
+  name?: string;
   title: string;
   note: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
-
-export const addNote = async (
+export const addNote = (
   db: SQLiteDatabase,
   name: string,
   title: string,
-  note: string,
-): Promise<void> => {
-  await db.executeSql(
-    `INSERT INTO notes (name, title, note) VALUES (?, ?, ?);`,
-    [name, title, note],
-  );
+  note: string
+): Promise<number> => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        `INSERT INTO notes (name,title, note) VALUES (?,?, ?)`,
+        [name,title, note],
+        (_, result) => {
+          resolve(result.insertId);
+          return true;
+        },
+        (_, error) => {
+          reject(error);
+          return false;
+        }
+      );
+    });
+  });
 };
+
 
 export const getAllNote = async (db: SQLiteDatabase): Promise<Note[]> => {
   const results = await db.executeSql('SELECT * FROM notes;');
