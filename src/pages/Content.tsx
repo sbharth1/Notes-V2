@@ -13,14 +13,11 @@ import {deleteNote, getAllNote, Note} from '../database/userQueries';
 import {initDB} from '../database';
 import {useNoteProvider} from '../store/NoteProivder';
 
-interface Props {
-  allnote?: Note[];
-}
-
-const Content: React.FC<Props> = () => {
+const Content: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [actionNoteId, setActionNoteId] = useState<number | null>(null);
+
   const {
     allnote,
     visible,
@@ -29,8 +26,9 @@ const Content: React.FC<Props> = () => {
     setSingleUserData,
     cardData,
     setCardData,
+    filteredCardData,
+    setFilteredCardData,
     darkMode,
-    setDarkMode,
   } = useNoteProvider();
 
   const handleDelete = (id: number) => {
@@ -45,6 +43,7 @@ const Content: React.FC<Props> = () => {
         await deleteNote(db, actionNoteId);
         const updatedNotes = await getAllNote(db);
         setCardData(updatedNotes);
+        setFilteredCardData(updatedNotes);
       } catch (err) {
         console.error('Delete failed', err);
       } finally {
@@ -54,20 +53,20 @@ const Content: React.FC<Props> = () => {
     }
   };
 
-  const onEditNote = async (id: number) => {
+  const onEditNote = (id: number) => {
     setHeadModal('Edit Note');
     const user = cardData?.filter(userId => userId.id === id);
     if (user) {
       setSingleUserData(user);
     }
-    setVisible(!visible);
+    setVisible(true);
   };
 
-  const SpecificUser = async (id: number) => {
+  const SpecificUser = (id: number) => {
     setHeadModal('User Note');
     const user = cardData?.filter(userId => userId.id === id);
     setSingleUserData(user);
-    setVisible(!visible);
+    setVisible(true);
   };
 
   useEffect(() => {
@@ -76,15 +75,13 @@ const Content: React.FC<Props> = () => {
 
   return (
     <View style={styles.container}>
-      {/* modal  */}
       <ViewModal />
 
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View style={styles.card}>
-          {cardData?.map((val, i) => (
+          {filteredCardData?.map((val, i) => (
             <TouchableOpacity key={i} onPress={() => SpecificUser(val.id)}>
               <Card.Title
-                key={i}
                 style={styles.maincard}
                 title={val.title}
                 subtitle={val.note}
@@ -126,7 +123,8 @@ const Content: React.FC<Props> = () => {
       <TouchableOpacity
         style={styles.fab}
         onPress={() => {
-          setVisible(true), setHeadModal('Add Note');
+          setVisible(true);
+          setHeadModal('Add Note');
         }}>
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>

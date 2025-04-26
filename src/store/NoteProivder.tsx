@@ -1,13 +1,15 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import {noteType} from '../types/note';
 import {getAllNote, Note} from '../database/userQueries';
 import {initDB} from '../database';
+import {noteType} from '../types/note';
 
-const AuthContext = createContext<noteType>(null);
+const AuthContext = createContext<noteType | null>(null);
 
 export const AuthProvider = ({children}: any) => {
   const [allnote, setAllNote] = useState<Note[]>([]);
   const [cardData, setCardData] = useState<Note[]>([]);
+  const [filteredCardData, setFilteredCardData] = useState<Note[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [visible, setVisible] = useState(false);
   const [singleUserData, setSingleUserData] = useState<Note[] | null>(null);
   const [headModal, setHeadModal] = useState<string>('Add Modal');
@@ -19,20 +21,30 @@ export const AuthProvider = ({children}: any) => {
     setCardData(prev => [note, ...prev]);
   };
 
-  //   to get all notes
   useEffect(() => {
     const run = async () => {
       try {
         const db = await initDB();
         const notes = await getAllNote(db);
         setAllNote(notes);
-        console.log(notes, '--notes--');
+        setCardData(notes);
       } catch (e) {
-        console.error('--- db error', e);
+        console.error('DB error:', e);
       }
     };
     run();
   }, []);
+
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setFilteredCardData(cardData);
+    } else {
+      const filtered = cardData.filter(item =>
+        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredCardData(filtered);
+    }
+  }, [searchQuery, cardData]);
 
   return (
     <AuthContext.Provider
@@ -47,6 +59,10 @@ export const AuthProvider = ({children}: any) => {
         setSingleUserData,
         cardData,
         setCardData,
+        filteredCardData,
+        setFilteredCardData,
+        searchQuery,
+        setSearchQuery,
         darkMode,
         setDarkMode,
         addNewNote,
@@ -59,7 +75,7 @@ export const AuthProvider = ({children}: any) => {
 export const useNoteProvider = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useNoteProvider must be used within an AuthProvider');
   }
   return context;
 };

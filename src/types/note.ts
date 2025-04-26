@@ -14,4 +14,8 @@ export type noteType = {
   darkMode: boolean;
   setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
   addNewNote: (note: Note) => void;
+  filteredCardData: Note[] | [];
+  setFilteredCardData: React.Dispatch<React.SetStateAction<Note[] | []>>;
+  searchQuery: string;
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
 } | null;
