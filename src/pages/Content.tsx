@@ -21,14 +21,22 @@ const Content: React.FC<Props> = () => {
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [actionNoteId, setActionNoteId] = useState<number | null>(null);
-  const {allnote,visible,setVisible,setHeadModal,setSingleUserData,cardData,setCardData,darkMode,setDarkMode} = useNoteProvider();
+  const {
+    allnote,
+    visible,
+    setVisible,
+    setHeadModal,
+    setSingleUserData,
+    cardData,
+    setCardData,
+    darkMode,
+    setDarkMode,
+  } = useNoteProvider();
 
   const handleDelete = (id: number) => {
     setActionNoteId(id);
     setShowAlert(true);
   };
-  console.log(actionNoteId, 'actionNoteId');
-
 
   const confirmDelete = async () => {
     if (actionNoteId !== null) {
@@ -38,37 +46,38 @@ const Content: React.FC<Props> = () => {
         const updatedNotes = await getAllNote(db);
         setCardData(updatedNotes);
       } catch (err) {
-        console.error("Delete failed", err);
+        console.error('Delete failed', err);
       } finally {
         setActionNoteId(null);
         setShowAlert(false);
       }
     }
-    setActionNoteId(null);
-    setShowAlert(false);
   };
-  
 
   const onEditNote = async (id: number) => {
-    const db = await initDB();
-    console.log('Editing note:', id);
+    setHeadModal('Edit Note');
+    const user = cardData?.filter(userId => userId.id === id);
+    if (user) {
+      setSingleUserData(user);
+    }
+    setVisible(!visible);
   };
 
-  const SpecificUser = async(id: number) => {
-    setHeadModal("User Note")
-    const user = cardData?.filter((userId)=> userId.id === id);
-    setSingleUserData(user)
-    setVisible(!visible)
+  const SpecificUser = async (id: number) => {
+    setHeadModal('User Note');
+    const user = cardData?.filter(userId => userId.id === id);
+    setSingleUserData(user);
+    setVisible(!visible);
   };
 
   useEffect(() => {
     setCardData(allnote || []);
-  }, [allnote ]);
+  }, [allnote]);
 
   return (
     <View style={styles.container}>
       {/* modal  */}
-      <ViewModal/>
+      <ViewModal />
 
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View style={styles.card}>
@@ -81,15 +90,15 @@ const Content: React.FC<Props> = () => {
                 subtitle={val.note}
                 right={() => (
                   <Menu
-                  visible={activeMenu === val.id}
-                  onDismiss={() => setActiveMenu(null)}
-                  anchor={
-                    <IconButton
-                    icon="dots-vertical"
-                    iconColor="black"
-                    onPress={() => setActiveMenu(val.id)}
-                    />
-                  }>
+                    visible={activeMenu === val.id}
+                    onDismiss={() => setActiveMenu(null)}
+                    anchor={
+                      <IconButton
+                        icon="dots-vertical"
+                        iconColor="black"
+                        onPress={() => setActiveMenu(val.id)}
+                      />
+                    }>
                     <Menu.Item
                       style={styles.menuitem}
                       onPress={() => {
@@ -97,7 +106,7 @@ const Content: React.FC<Props> = () => {
                         onEditNote(val.id);
                       }}
                       title="Edit"
-                      />
+                    />
                     <Menu.Item
                       style={styles.menuitem}
                       onPress={() => {
@@ -105,16 +114,20 @@ const Content: React.FC<Props> = () => {
                         handleDelete(val.id);
                       }}
                       title="Delete"
-                      />
+                    />
                   </Menu>
                 )}
-                />
+              />
             </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
 
-      <TouchableOpacity style={styles.fab} onPress={() => {setVisible(true),setHeadModal("Add Note")}}>
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => {
+          setVisible(true), setHeadModal('Add Note');
+        }}>
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>
 

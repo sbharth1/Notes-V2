@@ -4,11 +4,12 @@ import {Button, Modal, Portal, Text} from 'react-native-paper';
 import {useFormik} from 'formik';
 import * as Yup from 'yup';
 import {initDB} from '../database';
-import {addNote} from '../database/userQueries';
+import {addNote, editNote} from '../database/userQueries';
 import {useNoteProvider} from '../store/NoteProivder';
 
 const ViewModal = () => {
-  const {hideModal, visible, headModal, singleUserData,addNewNote} = useNoteProvider();
+  const {hideModal, visible, headModal, singleUserData, addNewNote} =
+    useNoteProvider();
   const validationSchema = Yup.object({
     title: Yup.string()
       .required('Title is required')
@@ -21,19 +22,36 @@ const ViewModal = () => {
   const formik = useFormik({
     initialValues: {
       title: '',
-      note: '', 
+      note: '',
     },
     validationSchema,
     onSubmit: async (values, {resetForm}) => {
       const db = await initDB();
-      const id = await addNote(db, 'userNotes', values.title, values.note);
-      if (id) {
-        addNewNote({id, title: values.title, note:values.note})
+      if (headModal === 'Edit Note') {
+        const id = singleUserData?.[0]?.id;
+        console.log(id, 'idedited--');
+        if (id) {
+          await editNote(db, values.title, values.note, id);
+        }
+      } else {
+        const id = await addNote(db, 'userNotes', values.title, values.note);
+        if (id) {
+          addNewNote({id, title: values.title, note: values.note});
+        }
       }
       resetForm();
       hideModal();
     },
   });
+
+  useEffect(() => {
+    if (headModal === 'Edit Note') {
+      const note = singleUserData?.[0];
+      if (note) {
+        formik.setValues({title: note.title, note: note.note});
+      }
+    }
+  }, [headModal, singleUserData]);
 
   return (
     <Portal>
@@ -78,7 +96,7 @@ const ViewModal = () => {
         ) : null}
 
         <View style={styles.buttonContainer}>
-          {headModal === 'Add Note' ? (
+          {headModal === 'Add Note' || headModal === 'Edit Note' ? (
             <Button
               mode="contained"
               buttonColor="green"
@@ -112,7 +130,7 @@ export default ViewModal;
 
 const styles = StyleSheet.create({
   mainModal: {
-    backgroundColor: '#fff',
+    backgroundColor: 'lightgray',
     padding: 20,
     borderRadius: 10,
     alignSelf: 'center',
