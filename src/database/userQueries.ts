@@ -2,7 +2,7 @@ import {SQLiteDatabase} from 'react-native-sqlite-storage';
 
 export interface Note {
   id: number;
-  name?: string;
+  name? : string;
   title: string;
   note: string;
   createdAt?: string;

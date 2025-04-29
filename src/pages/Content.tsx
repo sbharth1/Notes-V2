@@ -56,7 +56,7 @@ const Content: React.FC = () => {
   const onEditNote = (id: number) => {
     setHeadModal('Edit Note');
     const user = cardData?.filter(userId => userId.id === id);
-    if (user) {
+    if (user?.length) {
       setSingleUserData(user);
     }
     setVisible(true);

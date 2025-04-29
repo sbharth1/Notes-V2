@@ -8,7 +8,7 @@ import {addNote, editNote} from '../database/userQueries';
 import {useNoteProvider} from '../store/NoteProivder';
 
 const ViewModal = () => {
-  const {hideModal, visible, headModal, singleUserData, addNewNote} =
+  const {hideModal, visible, headModal, singleUserData,setSingleUserData, addNewNote} =
     useNoteProvider();
   const validationSchema = Yup.object({
     title: Yup.string()
@@ -29,7 +29,6 @@ const ViewModal = () => {
       const db = await initDB();
       if (headModal === 'Edit Note') {
         const id = singleUserData?.[0]?.id;
-        console.log(id, 'idedited--');
         if (id) {
           await editNote(db, values.title, values.note, id);
         }
@@ -39,6 +38,7 @@ const ViewModal = () => {
           addNewNote({id, title: values.title, note: values.note});
         }
       }
+      setSingleUserData(null);
       resetForm();
       hideModal();
     },
@@ -70,7 +70,7 @@ const ViewModal = () => {
           onBlur={formik.handleBlur('title')}
           style={styles.input1}
           placeholder="TITLE"
-          readOnly={headModal === 'User Note' ? true : false}
+          editable={headModal !== 'User Note'}
         />
         {formik.touched.title && formik.errors.title ? (
           <Text style={styles.errorText}>{formik.errors.title}</Text>
@@ -88,7 +88,7 @@ const ViewModal = () => {
           onBlur={formik.handleBlur('note')}
           style={styles.input2}
           placeholder="NOTE..."
-          readOnly={headModal === 'User Note' ? true : false}
+          editable={headModal !== 'User Note'}
           multiline
         />
         {formik.touched.note && formik.errors.note ? (
