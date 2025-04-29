@@ -64,8 +64,6 @@ export const AuthProvider = ({children}: any) => {
         setFilteredCardData,
         searchQuery,
         setSearchQuery,
-        darkMode,
-        setDarkMode,
         addNewNote,
         setSingleUserDataEdit,
         singleUserDataEdit,

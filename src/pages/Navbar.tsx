@@ -1,21 +1,15 @@
 import React from 'react';
-import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Text, TextInput} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNoteProvider} from '../store/NoteProivder';
 
 const Navbar = () => {
   const {
-    darkMode,
-    setDarkMode,
     searchQuery,
     setSearchQuery,
   } = useNoteProvider();
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    console.log('Dark mode toggled:', !darkMode);
-  };
+
 
   return (
     <View>
@@ -34,13 +28,6 @@ const Navbar = () => {
             onChangeText={text => setSearchQuery(text)}
           />
         </View>
-        <TouchableOpacity onPress={toggleDarkMode}>
-          <Icon
-            name={darkMode ? 'weather-night' : 'weather-sunny'}
-            size={24}
-            color="white"
-          />
-        </TouchableOpacity>
       </View>
     </View>
   );

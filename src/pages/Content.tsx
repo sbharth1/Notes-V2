@@ -28,7 +28,6 @@ const Content: React.FC = () => {
     setCardData,
     filteredCardData,
     setFilteredCardData,
-    darkMode,
     setSingleUserDataEdit,
     singleUserDataEdit,
   } = useNoteProvider();
@@ -121,6 +120,9 @@ const Content: React.FC = () => {
               />
             </TouchableOpacity>
           ))}
+          {filteredCardData.length === 0 && (
+                <Text style={{textAlign: 'center',color:"#f2f2f2"}}>No Notes Found</Text>
+          )}
         </View>
       </ScrollView>
 
