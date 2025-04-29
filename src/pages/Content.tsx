@@ -30,6 +30,7 @@ const Content: React.FC = () => {
     setFilteredCardData,
     darkMode,
     setSingleUserDataEdit,
+    singleUserDataEdit,
   } = useNoteProvider();
   
 
@@ -57,9 +58,10 @@ const Content: React.FC = () => {
 
   const onEditNote = (id: number) => {
     setHeadModal('Edit Note');
-    const user = cardData?.filter(userId => userId.id === id);
-    if (user?.length) {
-      setSingleUserDataEdit(user);
+    const user = cardData?.find(userId => userId.id === id);
+    if (user) {
+      setSingleUserDataEdit([user]);
+      console.log(singleUserDataEdit,'----data');
     }
     setVisible(true);
   };

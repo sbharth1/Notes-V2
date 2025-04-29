@@ -2,7 +2,7 @@ import {SQLiteDatabase} from 'react-native-sqlite-storage';
 
 export interface Note {
   id: number;
-  name? : string;
+  name?: string;
   title: string;
   note: string;
   createdAt?: string;
@@ -37,17 +37,27 @@ export const getAllNote = async (db: SQLiteDatabase): Promise<Note[]> => {
   const rows = results[0].rows.raw();
   return rows;
 };
-
 export const editNote = async (
   db: SQLiteDatabase,
   title: string,
   note: string,
   id: number,
 ): Promise<void> => {
-  await db.executeSql(
-    `UPDATE notes SET title = ?, note = ?, updatedAt = CURRENT_TIMESTAMP WHERE id = ?;`,
-    [title, note, id],
-  );
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        `UPDATE notes 
+         SET title = ?, note = ?, updatedAt = datetime('now') 
+         WHERE id = ?;`,
+        [title, note, id],
+        () => resolve(),
+        (_, error) => {
+          reject(error);
+          return false;
+        },
+      );
+    });
+  });
 };
 
 export const deleteNote = async (

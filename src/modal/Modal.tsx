@@ -15,8 +15,9 @@ const ViewModal = () => {
     singleUserData,
     setSingleUserData,
     addNewNote,
-    setSingleUserDataEdit,
     singleUserDataEdit,
+    cardData,
+    setCardData,
   } = useNoteProvider();
   const validationSchema = Yup.object({
     title: Yup.string()
@@ -29,16 +30,21 @@ const ViewModal = () => {
 
   const formik = useFormik({
     initialValues: {
-      title: '',
-      note: '',
+      title: singleUserDataEdit?.[0].title || '',
+      note: singleUserDataEdit?.[0].note || '',
     },
     validationSchema,
     onSubmit: async (values, {resetForm}) => {
       const db = await initDB();
       if (headModal === 'Edit Note') {
         const id = singleUserDataEdit?.[0]?.id;
+        console.log(singleUserDataEdit);
         if (id) {
           await editNote(db, values.title, values.note, id);
+          const updatedData = cardData.map(item =>
+            item.id === singleUserDataEdit[0].id ? {...item, ...values} : item,
+          );
+          setCardData(updatedData);
         }
       } else {
         const id = await addNote(db, 'userNotes', values.title, values.note);
@@ -51,50 +57,59 @@ const ViewModal = () => {
       hideModal();
     },
   });
-
   useEffect(() => {
-    if (headModal === 'Edit Note') {
-      const note = singleUserDataEdit?.[0];
-      if (note) {
-        formik.setValues({title: note.title, note: note.note});
-      }
+    if (headModal === 'Edit Note' && singleUserDataEdit) {
+      formik.setValues({
+        title: singleUserDataEdit[0].title,
+        note: singleUserDataEdit[0].note,
+      });
     }
-  }, [headModal, singleUserDataEdit]);
+  }, [singleUserDataEdit, headModal]);
 
   return (
     <Portal>
       <Modal visible={visible} contentContainerStyle={styles.mainModal}>
         <Text style={styles.modalHeader}>{headModal}</Text>
-          { headModal === "User Note" ? (
-            <TextInput  style={styles.input1} readOnly value={singleUserData?.[0].title} multiline/>
-          ) : 
-        <TextInput
-          value={formik.values.title}
-          onChangeText={formik.handleChange('title')}
-          onBlur={formik.handleBlur('title')}
-          style={styles.input1}
-          placeholder="TITLE"
-          editable={headModal !== 'User Note'}
-          multiline
-        />
-}
+        {headModal === 'User Note' ? (
+          <TextInput
+            style={styles.input1}
+            readOnly
+            value={singleUserData?.[0].title}
+            multiline
+          />
+        ) : (
+          <TextInput
+            value={formik.values.title}
+            onChangeText={formik.handleChange('title')}
+            onBlur={formik.handleBlur('title')}
+            style={styles.input1}
+            placeholder="TITLE"
+            editable={headModal !== 'User Note'}
+            multiline
+          />
+        )}
         {formik.touched.title && formik.errors.title ? (
           <Text style={styles.errorText}>{formik.errors.title}</Text>
         ) : null}
 
-    {headModal === "User Note" ? (
-          <TextInput style={styles.input2} readOnly value={singleUserData?.[0].note} multiline/>
-        ) :
-        <TextInput
-          value={formik.values.note}
-          onChangeText={formik.handleChange('note')}
-          onBlur={formik.handleBlur('note')}
-          style={styles.input2}
-          placeholder="NOTE..."
-          editable={headModal !== 'User Note'}
-          multiline
-        />
-      }
+        {headModal === 'User Note' ? (
+          <TextInput
+            style={styles.input2}
+            readOnly
+            value={singleUserData?.[0].note}
+            multiline
+          />
+        ) : (
+          <TextInput
+            value={formik.values.note}
+            onChangeText={formik.handleChange('note')}
+            onBlur={formik.handleBlur('note')}
+            style={styles.input2}
+            placeholder="NOTE..."
+            editable={headModal !== 'User Note'}
+            multiline
+          />
+        )}
         {formik.touched.note && formik.errors.note ? (
           <Text style={styles.errorText}>{formik.errors.note}</Text>
         ) : null}
