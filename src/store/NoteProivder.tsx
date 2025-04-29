@@ -12,6 +12,7 @@ export const AuthProvider = ({children}: any) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [visible, setVisible] = useState(false);
   const [singleUserData, setSingleUserData] = useState<Note[] | null>(null);
+  const [singleUserDataEdit, setSingleUserDataEdit] = useState<Note[] | null>(null);
   const [headModal, setHeadModal] = useState<string>('Add Modal');
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const hideModal = () => setVisible(false);
@@ -66,6 +67,8 @@ export const AuthProvider = ({children}: any) => {
         darkMode,
         setDarkMode,
         addNewNote,
+        setSingleUserDataEdit,
+        singleUserDataEdit,
       }}>
       {children}
     </AuthContext.Provider>

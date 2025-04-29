@@ -8,8 +8,16 @@ import {addNote, editNote} from '../database/userQueries';
 import {useNoteProvider} from '../store/NoteProivder';
 
 const ViewModal = () => {
-  const {hideModal, visible, headModal, singleUserData,setSingleUserData, addNewNote} =
-    useNoteProvider();
+  const {
+    hideModal,
+    visible,
+    headModal,
+    singleUserData,
+    setSingleUserData,
+    addNewNote,
+    setSingleUserDataEdit,
+    singleUserDataEdit,
+  } = useNoteProvider();
   const validationSchema = Yup.object({
     title: Yup.string()
       .required('Title is required')
@@ -28,7 +36,7 @@ const ViewModal = () => {
     onSubmit: async (values, {resetForm}) => {
       const db = await initDB();
       if (headModal === 'Edit Note') {
-        const id = singleUserData?.[0]?.id;
+        const id = singleUserDataEdit?.[0]?.id;
         if (id) {
           await editNote(db, values.title, values.note, id);
         }
@@ -46,44 +54,39 @@ const ViewModal = () => {
 
   useEffect(() => {
     if (headModal === 'Edit Note') {
-      const note = singleUserData?.[0];
+      const note = singleUserDataEdit?.[0];
       if (note) {
         formik.setValues({title: note.title, note: note.note});
       }
     }
-  }, [headModal, singleUserData]);
+  }, [headModal, singleUserDataEdit]);
 
   return (
     <Portal>
       <Modal visible={visible} contentContainerStyle={styles.mainModal}>
         <Text style={styles.modalHeader}>{headModal}</Text>
-
+          { headModal === "User Note" ? (
+            <TextInput  style={styles.input1} readOnly value={singleUserData?.[0].title} multiline/>
+          ) : 
         <TextInput
-          value={
-            headModal === 'Add Note'
-              ? formik.values.title
-              : singleUserData?.length
-              ? singleUserData[0]?.title
-              : ''
-          }
+          value={formik.values.title}
           onChangeText={formik.handleChange('title')}
           onBlur={formik.handleBlur('title')}
           style={styles.input1}
           placeholder="TITLE"
           editable={headModal !== 'User Note'}
+          multiline
         />
+}
         {formik.touched.title && formik.errors.title ? (
           <Text style={styles.errorText}>{formik.errors.title}</Text>
         ) : null}
 
+    {headModal === "User Note" ? (
+          <TextInput style={styles.input2} readOnly value={singleUserData?.[0].note} multiline/>
+        ) :
         <TextInput
-          value={
-            headModal === 'Add Note'
-              ? formik.values.note
-              : singleUserData?.length
-              ? singleUserData[0]?.note
-              : ''
-          }
+          value={formik.values.note}
           onChangeText={formik.handleChange('note')}
           onBlur={formik.handleBlur('note')}
           style={styles.input2}
@@ -91,6 +94,7 @@ const ViewModal = () => {
           editable={headModal !== 'User Note'}
           multiline
         />
+      }
         {formik.touched.note && formik.errors.note ? (
           <Text style={styles.errorText}>{formik.errors.note}</Text>
         ) : null}

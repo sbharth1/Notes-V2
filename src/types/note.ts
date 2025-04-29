@@ -18,4 +18,6 @@ export type noteType = {
   setFilteredCardData: React.Dispatch<React.SetStateAction<Note[] | []>>;
   searchQuery: string;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+  setSingleUserDataEdit: React.Dispatch<React.SetStateAction<Note[] | null>>;
+  singleUserDataEdit: Note[] | null;
 } | null;
