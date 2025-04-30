@@ -46,11 +46,7 @@ const ViewModal = () => {
           );
           setCardData(updatedData);
           await editNote(db, updatedData?.[0].title, updatedData?.[0].note, id);
-          await getAllNote(db).then(data => {
-            setCardData(data);
-          });
-          setSingleUserDataEdit(null);
-        }
+         }
       } else {
         const id = await addNote(db, 'userNotes', values.title, values.note);
         if (id) {
