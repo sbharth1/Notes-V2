@@ -4,7 +4,7 @@ import {Button, Modal, Portal, Text} from 'react-native-paper';
 import {useFormik} from 'formik';
 import * as Yup from 'yup';
 import {initDB} from '../database';
-import {addNote, editNote} from '../database/userQueries';
+import {addNote, editNote, getAllNote} from '../database/userQueries';
 import {useNoteProvider} from '../store/NoteProivder';
 
 const ViewModal = () => {
@@ -18,6 +18,7 @@ const ViewModal = () => {
     singleUserDataEdit,
     cardData,
     setCardData,
+    setSingleUserDataEdit
   } = useNoteProvider();
   const validationSchema = Yup.object({
     title: Yup.string()
@@ -40,16 +41,24 @@ const ViewModal = () => {
         const id = singleUserDataEdit?.[0]?.id;
         console.log(singleUserDataEdit);
         if (id) {
-          await editNote(db, values.title, values.note, id);
-          const updatedData = cardData.map(item =>
+          const updatedData = cardData.map(item =>  
             item.id === singleUserDataEdit[0].id ? {...item, ...values} : item,
           );
           setCardData(updatedData);
+          await editNote(db, updatedData?.[0].title, updatedData?.[0].note, id);
+          await getAllNote(db).then(data => {
+            setCardData(data);
+          });
+          setSingleUserDataEdit(null);
         }
       } else {
         const id = await addNote(db, 'userNotes', values.title, values.note);
         if (id) {
           addNewNote({id, title: values.title, note: values.note});
+          await getAllNote(db).then(data => {
+            setCardData(data);
+          });
+          setSingleUserDataEdit(null);
         }
       }
       setSingleUserData(null);

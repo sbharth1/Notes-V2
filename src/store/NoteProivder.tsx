@@ -14,7 +14,6 @@ export const AuthProvider = ({children}: any) => {
   const [singleUserData, setSingleUserData] = useState<Note[] | null>(null);
   const [singleUserDataEdit, setSingleUserDataEdit] = useState<Note[] | null>(null);
   const [headModal, setHeadModal] = useState<string>('Add Modal');
-  const [darkMode, setDarkMode] = useState<boolean>(false);
   const hideModal = () => setVisible(false);
 
   const addNewNote = (note: Note) => {
