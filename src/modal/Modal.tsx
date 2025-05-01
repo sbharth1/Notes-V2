@@ -39,13 +39,13 @@ const ViewModal = () => {
       const db = await initDB();
       if (headModal === 'Edit Note') {
         const id = singleUserDataEdit?.[0]?.id;
-        console.log(singleUserDataEdit);
         if (id) {
           const updatedData = cardData.map(item =>  
             item.id === singleUserDataEdit[0].id ? {...item, ...values} : item,
           );
           setCardData(updatedData);
-          await editNote(db, updatedData?.[0].title, updatedData?.[0].note, id);
+          console.log('Updated data:', updatedData);
+          await editNote(db, updatedData[0].title, updatedData[0].note, id);
          }
       } else {
         const id = await addNote(db, 'userNotes', values.title, values.note);
