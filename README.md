@@ -3,7 +3,7 @@
 A **React Native Notes App** built with [`@react-native-community/cli`](https://github.com/react-native-community/cli).  
 Create, manage, and organize notes seamlessly — simple, fast, and cross-platform.  
 
-![App Screenshot](https://github.com/sbharth1/Notes-V2/blob/06a725df91a6bef809e0a5e7fec0bd2c67726147/src/public/NotesSS.jpeg)
+<img src="src/public/NotesSS.jpeg" alt="Notes Screenshot" width="200"/>
 
 ---
 
