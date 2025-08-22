@@ -28,37 +28,41 @@ npm start
 
 # OR using Yarn
 yarn start
+```
+
 2. Run the App
 Android
-sh
-Copy
-Edit
+```sh
 # Using npm
 npm run android
 
 # OR using Yarn
 yarn android
-iOS
-Install CocoaPods (first time only):
+```
 
-sh
-Copy
-Edit
+iOS
+
+Install CocoaPods (first time only): 
+
+```sh
 bundle install
 bundle exec pod install
-Then run:
 
-sh
-Copy
-Edit
+```
+Then run:
+```sh
 # Using npm
 npm run ios
 
 # OR using Yarn
 yarn ios
+```
 If everything is set up correctly, the app will launch in your Android Emulator, iOS Simulator, or connected device.
 
+---
+
 ✏️ Development
+
 Open App.tsx and start coding. Thanks to Fast Refresh, your changes will appear instantly.
 
 To force reload the app:
@@ -67,23 +71,33 @@ Android → press R twice or open the Dev Menu (Ctrl+M / Cmd+M)
 
 iOS → press R in the iOS Simulator
 
+---
 🧩 Next Steps
-📖 Integration Guide – add React Native to existing apps
 
-🎓 Learn the Basics – a guided tour of React Native basics
+📖 Integration Guide
+ – add React Native to existing apps
 
-📰 React Native Blog – stay updated with official news
+🎓 Learn the Basics
+ – a guided tour of React Native basics
 
-🛠️ Troubleshooting
-Having issues?
-Check out the official Troubleshooting Guide.
+📰 React Native Blog
+ – stay updated with official news
+
+---
 
 📚 Learn More
-React Native Docs – official documentation
 
-Environment Setup – prepare your machine
+React Native Docs
+ – official documentation
 
-@facebook/react-native – GitHub repo
+Environment Setup
+ – prepare your machine
 
-🎉 Congratulations!
+@facebook/react-native
+ – GitHub repo
+
+ ---
+
+ 🎉 Congratulations!
+
 You’ve successfully built and run Notes V2. Now go ahead and make it your own! 🚀
