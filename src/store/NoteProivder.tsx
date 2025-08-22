@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import React, {createContext, useContext, useEffect, useState, useCallback} from 'react';
 import {getAllNote, Note} from '../database/userQueries';
 import {initDB} from '../database';
 import {noteType} from '../types/note';
@@ -14,26 +14,30 @@ export const AuthProvider = ({children}: any) => {
   const [singleUserData, setSingleUserData] = useState<Note[] | null>(null);
   const [singleUserDataEdit, setSingleUserDataEdit] = useState<Note[] | null>(null);
   const [headModal, setHeadModal] = useState<string>('Add Modal');
-  const hideModal = () => setVisible(false);
+  
+  const hideModal = useCallback(() => setVisible(false), []);
 
-  const addNewNote = (note: Note) => {
+  const addNewNote = useCallback((note: Note) => {
     setAllNote(prev => [note, ...prev]);
     setCardData(prev => [note, ...prev]);
-  };
+    setFilteredCardData(prev => [note, ...prev]);
+  }, []);
+
+  const refreshAllNotes = useCallback(async () => {
+    try {
+      const db = await initDB();
+      const notes = await getAllNote(db);
+      setAllNote(notes);
+      setCardData(notes);
+      setFilteredCardData(notes);
+    } catch (e) {
+      console.error('DB error:', e);
+    }
+  }, []);
 
   useEffect(() => {
-    const run = async () => {
-      try {
-        const db = await initDB();
-        const notes = await getAllNote(db);
-        setAllNote(notes);
-        setCardData(notes);
-      } catch (e) {
-        console.error('DB error:', e);
-      }
-    };
-    run();
-  }, []);
+    refreshAllNotes();
+  }, [refreshAllNotes]);
 
   useEffect(() => {
     if (searchQuery.trim() === '') {
@@ -66,6 +70,7 @@ export const AuthProvider = ({children}: any) => {
         addNewNote,
         setSingleUserDataEdit,
         singleUserDataEdit,
+        refreshAllNotes,
       }}>
       {children}
     </AuthContext.Provider>

@@ -23,7 +23,7 @@ const Navbar = () => {
             style={styles.mainsearchbar}
             underlineColor="transparent"
             mode="flat"
-            textColor="white"
+            textColor="black"
             value={searchQuery}
             onChangeText={text => setSearchQuery(text)}
           />

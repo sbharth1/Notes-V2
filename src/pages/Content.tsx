@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import AwesomeAlert from 'react-native-awesome-alerts';
+import {Alert} from 'react-native';
 import {
   Text,
   StyleSheet,
@@ -9,18 +9,15 @@ import {
 } from 'react-native';
 import {Card, IconButton, Menu} from 'react-native-paper';
 import ViewModal from '../modal/Modal';
-import {deleteNote, getAllNote, Note} from '../database/userQueries';
+import {deleteNote} from '../database/userQueries';
 import {initDB} from '../database';
 import {useNoteProvider} from '../store/NoteProivder';
 
 const Content: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
-  const [showAlert, setShowAlert] = useState(false);
-  const [actionNoteId, setActionNoteId] = useState<number | null>(null);
 
   const {
     allnote,
-    visible,
     setVisible,
     setHeadModal,
     setSingleUserData,
@@ -29,29 +26,34 @@ const Content: React.FC = () => {
     filteredCardData,
     setFilteredCardData,
     setSingleUserDataEdit,
-    singleUserDataEdit,
+    refreshAllNotes,
   } = useNoteProvider();
-  
 
   const handleDelete = (id: number) => {
-    setActionNoteId(id);
-    setShowAlert(true);
+    Alert.alert(
+      'Confirm Delete',
+      'Are you sure you want to delete this note?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes, Delete',
+          style: 'destructive',
+          onPress: () => confirmDelete(id),
+        },
+      ]
+    );
   };
 
-  const confirmDelete = async () => {
-    if (actionNoteId !== null) {
-      try {
-        const db = await initDB();
-        await deleteNote(db, actionNoteId);
-        const updatedNotes = await getAllNote(db);
-        setCardData(updatedNotes);
-        setFilteredCardData(updatedNotes);
-      } catch (err) {
-        console.error('Delete failed', err);
-      } finally {
-        setActionNoteId(null);
-        setShowAlert(false);
-      }
+  const confirmDelete = async (id: number) => {
+    try {
+      const db = await initDB();
+      await deleteNote(db, id);
+      await refreshAllNotes();
+    } catch (err) {
+      console.error('Delete failed', err);
     }
   };
 
@@ -60,7 +62,6 @@ const Content: React.FC = () => {
     const user = cardData?.find(userId => userId.id === id);
     if (user) {
       setSingleUserDataEdit([user]);
-      console.log(singleUserDataEdit,'----data');
     }
     setVisible(true);
   };
@@ -73,8 +74,11 @@ const Content: React.FC = () => {
   };
 
   useEffect(() => {
-    setCardData(allnote || []);
-  }, [allnote]);
+    if (allnote) {
+      setCardData(allnote);
+      setFilteredCardData(allnote);
+    }
+  }, [allnote, setCardData, setFilteredCardData]);
 
   return (
     <View style={styles.container}>
@@ -82,8 +86,8 @@ const Content: React.FC = () => {
 
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View style={styles.card}>
-          {filteredCardData?.map((val, i) => (
-            <TouchableOpacity key={i} onPress={() => SpecificUser(val.id)}>
+          {filteredCardData?.map((val) => (
+            <TouchableOpacity key={val.id} onPress={() => SpecificUser(val.id)}>
               <Card.Title
                 style={styles.maincard}
                 title={val.title}
@@ -121,7 +125,7 @@ const Content: React.FC = () => {
             </TouchableOpacity>
           ))}
           {filteredCardData.length === 0 && (
-                <Text style={{textAlign: 'center',color:"#f2f2f2"}}>No Notes Found</Text>
+            <Text style={styles.noNotesText}>No Notes Found</Text>
           )}
         </View>
       </ScrollView>
@@ -134,26 +138,6 @@ const Content: React.FC = () => {
         }}>
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>
-
-      <AwesomeAlert
-        show={showAlert}
-        showProgress={false}
-        title="Confirm Delete"
-        message="Are you sure you want to delete this note?"
-        closeOnTouchOutside={false}
-        closeOnHardwareBackPress={false}
-        showConfirmButton={true}
-        showCancelButton={true}
-        confirmText="Yes, Delete"
-        cancelText="Cancel"
-        cancelButtonColor="red"
-        confirmButtonColor="green"
-        onConfirmPressed={confirmDelete}
-        onCancelPressed={() => {
-          setShowAlert(false);
-          setActionNoteId(null);
-        }}
-      />
     </View>
   );
 };
@@ -164,6 +148,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
+    backgroundColor: 'black',
   },
   scrollViewContainer: {
     flexGrow: 1,
@@ -201,4 +186,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   menuitem: {},
+  noNotesText: {
+    textAlign: 'center',
+    color: '#f2f2f2',
+    fontSize: 16,
+    marginTop: 20,
+  },
 });

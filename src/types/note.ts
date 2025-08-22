@@ -18,4 +18,5 @@ export type noteType = {
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   setSingleUserDataEdit: React.Dispatch<React.SetStateAction<Note[] | null>>;
   singleUserDataEdit: Note[] | null;
+  refreshAllNotes: () => Promise<void>;
 } | null;

@@ -8,6 +8,7 @@ export interface Note {
   createdAt?: string;
   updatedAt?: string;
 }
+
 export const addNote = (
   db: SQLiteDatabase,
   name: string,
@@ -33,10 +34,11 @@ export const addNote = (
 };
 
 export const getAllNote = async (db: SQLiteDatabase): Promise<Note[]> => {
-  const results = await db.executeSql('SELECT * FROM notes;');
+  const results = await db.executeSql('SELECT * FROM notes ORDER BY createdAt DESC;');
   const rows = results[0].rows.raw();
   return rows;
 };
+
 export const editNote = async (
   db: SQLiteDatabase,
   title: string,
@@ -70,10 +72,8 @@ export const deleteNote = async (
 export const specificNote = async (
   db: SQLiteDatabase,
   id: number,
-): Promise<Note[] | null> => {
-  const res = await db.executeSql(`SLECT * FROM notes WHERE id = ?;`, [id]);
-  if (res[0].rows.length > 0) {
-    return res[0].rows.item(0);
-  }
-  return null;
+): Promise<Note[]> => {
+  const res = await db.executeSql(`SELECT * FROM notes WHERE id = ?;`, [id]);
+  const rows = res[0].rows.raw();
+  return rows;
 };
