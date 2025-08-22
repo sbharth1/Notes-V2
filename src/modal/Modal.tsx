@@ -118,16 +118,26 @@ const ViewModal = () => {
           <Text style={styles.modalHeader}>{headModal}</Text>
           
           {headModal === 'User Note' ? (
-            <View style={styles.viewContainer}>
-              <View style={styles.titleSection}>
-                <Text style={styles.labelText}>Title:</Text>
-                <Text style={styles.viewTitle}>{singleUserData?.[0]?.title || ''}</Text>
-              </View>
+            <View style={styles.inputContainer}>
+              <TextInput
+                value={singleUserData?.[0]?.title || ''}
+                style={[styles.input1, styles.readOnlyInput]}
+                placeholder="Title"
+                placeholderTextColor={'#888'}
+                multiline
+                maxLength={100}
+                editable={false}
+              />
               
-              <View style={styles.noteSection}>
-                <Text style={styles.labelText}>Description:</Text>
-                <Text style={styles.viewNote}>{singleUserData?.[0]?.note || ''}</Text>
-              </View>
+              <TextInput
+                value={singleUserData?.[0]?.note || ''}
+                placeholderTextColor={'#888'}
+                style={[styles.input2, styles.readOnlyInput]}
+                placeholder="Note content"
+                multiline
+                textAlignVertical="top"
+                editable={false}
+              />
             </View>
           ) : (
             <View style={styles.inputContainer}>
@@ -141,10 +151,11 @@ const ViewModal = () => {
                 multiline
                 maxLength={100}
               />
-              
+                        
               {formik.touched.title && formik.errors.title ? (
                 <Text style={styles.errorText}>{formik.errors.title}</Text>
               ) : null}
+              
 
               <TextInput
                 value={note}
@@ -236,7 +247,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   labelText: {
-    fontSize: 14,
+    fontSize: 10,
     fontWeight: '600',
     color: '#666',
     marginBottom: 4,
@@ -244,14 +255,14 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   viewTitle: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '600',
     color: '#333',
     lineHeight: 24,
   },
   viewNote: {
     fontSize: 14,
-    color: '#666',
+    color: '#000',
     lineHeight: 20,
   },
   inputContainer: {
@@ -280,6 +291,11 @@ const styles = StyleSheet.create({
     borderColor: '#e9ecef',
     marginBottom: 8,
     minHeight: 120,
+  },
+  readOnlyInput: {
+    backgroundColor: '#f5f5f5',
+    color: '#666',
+    borderColor: '#ddd',
   },
   errorText: {
     color: '#dc3545',
